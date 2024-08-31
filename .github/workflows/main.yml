@@ -5,6 +5,11 @@ on:
     tags:
       - 'v*.*.*' # Triggers the workflow when a tag is pushed
   workflow_dispatch: # Enables manual triggering from the UI
+    inputs:
+      output_filename:
+        description: 'Output filename for the ZIP file'
+        required: true
+        default: 'my_project.zip' # Default filename
 
 permissions: 
   contents: write
@@ -76,5 +81,5 @@ jobs:
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
         asset_path: ./my_project.zip
-        asset_name: my_project.zip
+        asset_name: ${{ github.event.inputs.output_filename }}
         asset_content_type: application/zip
