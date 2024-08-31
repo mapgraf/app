@@ -24,7 +24,7 @@ jobs:
       run: go install github.com/magefile/mage@latest
 
     - name: Run Mage build
-      run: mage build # Assumes you have a 'build' target in your Magefile.go
+      run: mage -v build:Linux
 
     - name: Zip build output
       run: zip -r my_project.zip ./build_output_dir # Replace with your build output directory
