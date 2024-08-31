@@ -7,7 +7,7 @@ on:
   workflow_dispatch: # Enables manual triggering from the UI
     inputs:
       org_name:
-        description: 'organization'
+        description: 'your organization'
         required: true
         default: 'NOC' 
       target_sys:
