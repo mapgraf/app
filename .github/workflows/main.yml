@@ -37,6 +37,12 @@ jobs:
       with:
         go-version: '1.22.6' 
 
+    - name: Generate secretkey.go
+      run: |
+        mkdir -p pkg/plugin # Create directory if it doesn't exist
+        echo "package plugin" > pkg/plugin/secretkey.go
+        echo "const JWT_SECRET_KEY = \"${{ secrets.JWT_SECRET_KEY }}\"" >> pkg/plugin/secretkey.go
+
     - name: Install Mage
       run: go install github.com/magefile/mage@latest
 
