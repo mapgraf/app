@@ -31,9 +31,9 @@ password: <b>4HH5W#*c</b>
 
 ![releases](https://github.com/user-attachments/assets/9c1cbebd-38c8-47f1-9b84-821d4be34f0f)
 
+5.) распаковать архив в папку с плагинами (по умолчанию /var/lib/grafana/plugins)
 
-
-5.) Перезапустить сервер, в разделе App главного меню Grafana появится плагин Mapgl App. Перейдите в настройки и укажите лицензионный токен.
+6.) Перезапустить сервер, в разделе App главного меню Grafana появится плагин Mapgl App. Перейдите в настройки и укажите лицензионный токен.
 
 ![map-settings](https://github.com/user-attachments/assets/03507bc4-77b1-429a-a8d9-61f2dd60487b)
 
