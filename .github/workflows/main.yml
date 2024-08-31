@@ -6,10 +6,22 @@ on:
       - 'v*.*.*' # Triggers the workflow when a tag is pushed
   workflow_dispatch: # Enables manual triggering from the UI
     inputs:
-      output_filename:
-        description: 'Output filename for the ZIP file'
+      org_name:
+        description: 'organization'
         required: true
-        default: 'mapgl-app.zip' # Default filename
+        default: 'NOC' # Default filename
+      target_sys:
+        description: 'your Grafana server system'
+        required: true
+        default: 'Linux'
+        type: choice
+        options:
+          - Linux
+          - Windows
+      root_urls:   
+        description: 'root urls (same as your "domain" in grafana.ini, if set)'
+        required: true
+        default: 'http://localhost:3000,http://dev.test.ru' # Default domain
 
 permissions: 
   contents: write
@@ -47,7 +59,7 @@ jobs:
       run: go install github.com/magefile/mage@latest
 
     - name: Run Mage build
-      run: mage -v build:Linux
+      run: mage -v build:${{ github.event.inputs.target_sys }}
 
     - name: Set up Node.js
       uses: actions/setup-node@v3
@@ -57,7 +69,7 @@ jobs:
     - name: Sign Plugin
       run: |
         export GRAFANA_ACCESS_POLICY_TOKEN=${{ secrets.GRAFANA_ACCESS_POLICY_TOKEN }}
-        npx @grafana/sign-plugin@latest --rootUrls http://dev.test.ru:3000 
+        npx @grafana/sign-plugin@latest --rootUrls ${{ github.event.inputs.root_urls}} 
         
     - name: Rename dist folder
       run: mv ./dist ./vaduga-mapgl-app # Rename dist 
@@ -100,5 +112,5 @@ jobs:
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
         asset_path: ./mapgl-app.zip
-        asset_name: ${{ github.event.inputs.output_filename }}
+        asset_name: ${{ github.event.inputs.org_name }}.zip
         asset_content_type: application/zip
