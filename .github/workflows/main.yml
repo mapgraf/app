@@ -27,7 +27,7 @@ jobs:
       run: mage -v build:Linux
 
     - name: Zip build output
-      run: zip -r my_project.zip ./build_output_dir # Replace with your build output directory
+      run: zip -r my_project.zip ./dist
 
     - name: Upload Artifact
       uses: actions/upload-artifact@v3
