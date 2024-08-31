@@ -1,17 +1,17 @@
 package settings
 
 const (
-	ApiToken     = "token"
-	ApiPort = "8089"
+	ApiToken = "token"
+	ApiPort  = "8089"
 )
 
-// ZabbixDatasourceSettingsDTO model
+// SettingsDTO model
 type MapglAppSettingsDTO struct {
 	ApiToken string `json:"apiToken"`
-	ApiPort     string    `json:"apiPort"`
+	ApiPort  string `json:"apiPort"`
 }
 
-// ZabbixDatasourceSettings model
+// Settings model
 type MapglAppSettings struct {
 	ApiToken string
 	ApiPort  string
