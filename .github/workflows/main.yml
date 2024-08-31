@@ -9,7 +9,7 @@ on:
       org_name:
         description: 'organization'
         required: true
-        default: 'NOC' # Default filename
+        default: 'NOC' 
       target_sys:
         description: 'your Grafana server system'
         required: true
@@ -19,21 +19,14 @@ on:
           - Linux
           - Windows
       root_urls:   
-        description: 'root urls (same as your "domain" in grafana.ini, if set)'
+        description: 'root urls ("domain" in grafana.ini, if set)'
         required: true
-        default: 'http://localhost:3000,http://dev.test.ru' # Default domain
+        default: 'http://localhost:3000,http://dev.test.ru' # separated by comma, no whitespace!
 
 permissions: 
   contents: write
-  packages: write
   actions: write
-  deployments: write
-  discussions: write
-  issues: write
-  pages: write
-  pull-requests: write
-  repository-projects: write  
-  statuses: write  
+  deployments: write    
 
 jobs:
   build:
@@ -51,7 +44,7 @@ jobs:
 
     - name: Generate secretkey.go
       run: |
-        mkdir -p pkg/plugin # Create directory if it doesn't exist
+        mkdir -p pkg/plugin 
         echo "package plugin" > pkg/plugin/secretkey.go
         echo "const JWT_SECRET_KEY = \"${{ secrets.JWT_SECRET_KEY }}\"" >> pkg/plugin/secretkey.go
 
@@ -75,7 +68,7 @@ jobs:
       run: mv ./dist ./vaduga-mapgl-app # Rename dist 
 
     - name: Zip build output
-      run: zip -r mapgl-app.zip ./vaduga-mapgl-app ./MANIFEST.txt ./vaduga-mapgl-app/* # Include all required files
+      run: zip -r mapgl-app.zip ./vaduga-mapgl-app ./MANIFEST.txt ./vaduga-mapgl-app/* 
 
     - name: Upload Artifact
       uses: actions/upload-artifact@v4
