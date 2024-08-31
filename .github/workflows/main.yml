@@ -43,11 +43,21 @@ jobs:
     - name: Run Mage build
       run: mage -v build:Linux
 
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: '18' 
+    
+    - name: Sign Plugin
+      run: |
+        export GRAFANA_ACCESS_POLICY_TOKEN=${{ secrets.GRAFANA_ACCESS_POLICY_TOKEN }}
+        npx @grafana/sign-plugin@latest --rootUrls http://dev.test.ru:3000 
+        
     - name: Rename dist folder
-      run: mv ./dist ./vaduga-mapgl-app # Rename dist
+      run: mv ./dist ./vaduga-mapgl-app # Rename dist 
 
     - name: Zip build output
-      run: zip -r mapgl-app.zip ./vaduga-mapgl-app
+      run: zip -r mapgl-app.zip ./vaduga-mapgl-app ./MANIFEST.txt ./vaduga-mapgl-app/* # Include all required files
 
     - name: Upload Artifact
       uses: actions/upload-artifact@v4
