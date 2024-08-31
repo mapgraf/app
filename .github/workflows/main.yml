@@ -6,9 +6,7 @@ on:
       - 'v*.*.*' # Triggers the workflow when a tag is pushed
   workflow_dispatch: # Enables manual triggering from the UI
 
-permissions:
-  contents: write
-  actions: read
+permissions: write-all
 
 jobs:
   build:
