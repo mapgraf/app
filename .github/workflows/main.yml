@@ -9,7 +9,7 @@ on:
       output_filename:
         description: 'Output filename for the ZIP file'
         required: true
-        default: 'my_project.zip' # Default filename
+        default: 'mapgl-app.zip' # Default filename
 
 permissions: 
   contents: write
@@ -35,7 +35,7 @@ jobs:
     - name: Set up Go
       uses: actions/setup-go@v4
       with:
-        go-version: '1.22.6' # Set to your Go version
+        go-version: '1.22.6' 
 
     - name: Install Mage
       run: go install github.com/magefile/mage@latest
@@ -43,14 +43,17 @@ jobs:
     - name: Run Mage build
       run: mage -v build:Linux
 
+    - name: Rename dist folder
+      run: mv ./dist ./vaduga-mapgl-app # Rename dist
+
     - name: Zip build output
-      run: zip -r my_project.zip ./dist
+      run: zip -r mapgl-app.zip ./vaduga-mapgl-app
 
     - name: Upload Artifact
       uses: actions/upload-artifact@v4
       with:
-        name: my_project.zip
-        path: my_project.zip
+        name: mapgl-app.zip
+        path: mapgl-app.zip
 
   release:
     name: Create GitHub Release
@@ -61,7 +64,7 @@ jobs:
     - name: Download artifact
       uses: actions/download-artifact@v4
       with:
-        name: my_project.zip
+        name: mapgl-app.zip
 
     - name: Create Release
       id: create_release
@@ -80,6 +83,6 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./my_project.zip
+        asset_path: ./mapgl-app.zip
         asset_name: ${{ github.event.inputs.output_filename }}
         asset_content_type: application/zip
