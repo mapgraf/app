@@ -410,7 +410,7 @@ func (a *App) handlePing(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	secretKey := ""
+	secretKey := JWT_SECRET_KEY
 
 	claims, err := util.DecodeToken(tokenString, secretKey)
 	if err != nil {
@@ -505,7 +505,7 @@ func (a *App) registerRoutes(r *mux.Router) {
 
 	orgName := "demo-org"
 	domain := "https://play.mapgl.org"
-	secretKey := ""
+	secretKey := JWT_SECRET_KEY
 
 	tokenString, expirationTime, err := util.GenerateJWT(orgName, domain, secretKey)
 	if err != nil {
