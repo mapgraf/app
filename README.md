@@ -1,3 +1,5 @@
+<b>!!!! При открытии в Grafana поочерёдно панелей с бесплатной и платной версии плагина, возможна ошибка из-за конфликта версий рендер-ядра. Решается перезагрузкой страницы (F5) </b>
+
 Тестирование и аудит плагина геокарты сетей Mapgl.ru (платная версия)
 
 1.) https://github.com/mapgraf/builder войти под учетной записью:
@@ -40,3 +42,5 @@ password: <b>4HH5W#*c</b>
 Токен действует до: <b>2024-09-21 13:33:10 UTC</b>
 
 ```eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJvcmdOYW1lIjoiZGVtby1PcmciLCJkb21haW4iOiJkZW1vLm9yZyIsImZlYXRMaW1pdCI6MTAwLCJleHAiOjE3MjY5Mjc1MzJ9._yc9qUZOTY6Q3novj6EVKgiRJCYb1YmvkxrSgmXHPBg```
+
+
