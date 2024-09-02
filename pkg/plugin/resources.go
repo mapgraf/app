@@ -503,18 +503,7 @@ func (a *App) registerRoutes(r *mux.Router) {
 	r.HandleFunc("/ping", a.handlePing)
 	r.HandleFunc("/echo", a.handleEcho)
 
-	orgName := "demo-org"
-	domain := "https://play.mapgl.org"
 	secretKey := JWT_SECRET_KEY
-
-	tokenString, expirationTime, err := util.GenerateJWT(orgName, domain, secretKey)
-	if err != nil {
-		log.DefaultLogger.Info("Error creating token:", err)
-		return
-	}
-
-	log.DefaultLogger.Info(fmt.Sprintf("Generated Token: %s", tokenString))
-	log.DefaultLogger.Info(fmt.Sprintf("Gen token expires at: %s", time.Unix(expirationTime, 0)))
 
 	if util.IsValidToken(a.MapglSettings.ApiToken, secretKey) { //  tokenString
 
