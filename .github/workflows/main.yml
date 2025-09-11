@@ -42,11 +42,11 @@ jobs:
       with:
         go-version: '1.22.6' 
 
-    - name: Generate secretkey.go
+    - name: Generate public_key_b64.go
       run: |
         mkdir -p pkg/plugin 
-        echo "package plugin" > pkg/plugin/secretkey.go
-        echo "const JWT_SECRET_KEY = \"${{ secrets.JWT_SECRET_KEY }}\"" >> pkg/plugin/secretkey.go
+        echo "package plugin" > pkg/plugin/public_key_b64.go
+        echo "const JWT_PUBLIC_KEY = \"${{ secrets.JWT_PUBLIC_KEY }}\"" >> pkg/plugin/public_key_b64.go
 
     - name: Install Mage
       run: go install github.com/magefile/mage@latest

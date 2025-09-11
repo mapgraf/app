@@ -1,0 +1,39 @@
+{
+    "$schema": "https://raw.githubusercontent.com/grafana/grafana/main/docs/sources/developers/plugins/plugin.schema.json",
+    "type": "app",
+    "name": "Mapgl-app",
+    "id": "vaduga-mapgl-app",
+    "backend": true,
+    "executable": "gpx_mapglapp",
+    "info": {
+        "keywords": [
+            "app"
+        ],
+        "description": "Mapgl app: premium panel + backend app for replication",
+        "author": {
+            "name": "Vaduga"
+        },
+        "logos": {
+            "small": "img/logo.svg",
+            "large": "img/logo.svg"
+        },
+        "screenshots": [],
+        "version": "1.0.0",
+        "updated": "2025-09-11"
+    },
+    "includes": [
+        {
+            "type": "page",
+            "icon": "cog",
+            "name": "Configuration",
+            "path": "/plugins/vaduga-mapgl-app",
+            "role": "Admin",
+            "addToNav": true
+        }
+    ],
+    "dependencies": {
+        "grafanaDependency": ">=10.0.3",
+        "plugins": []
+    },
+    "buildMode": "production"
+}
