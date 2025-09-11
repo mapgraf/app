@@ -5,30 +5,30 @@ import (
 	"fmt"
 	"github.com/gorilla/mux"
 	"github.com/grafana/grafana-plugin-sdk-go/backend/log"
-	"github.com/nalgeon/redka"
 	"mapgl-app/pkg/database"
 	"mapgl-app/pkg/util"
+	_ "modernc.org/sqlite"
 	"net/http"
 	"strconv"
-	"sync"
+	"strings"
 	"time"
 )
 
-var (
-	dbMu sync.RWMutex
-	DB   *redka.DB
-)
+//var (
+//	dbMu sync.RWMutex
+//	DB   *redka.DB
+//)
 
 func init() {
 	// Initialize the DB instance
-	DB = database.DB
+	//DB = database.DB
 }
 
-func GetDB() *redka.DB {
-	dbMu.RLock()
-	defer dbMu.RUnlock()
-	return DB
-}
+//func GetDB() *redka.DB {
+//	dbMu.RLock()
+//	defer dbMu.RUnlock()
+//	return DB
+//}
 
 type SetItem struct {
 	id    int
@@ -64,12 +64,10 @@ type NewEdgeDoc struct {
 }
 
 type Response struct {
-	Status     string `json:"status"`
-	OrgName    string `json:"orgName"`
-	DomainName string `json:"domain"`
-	FeatLimit  int64  `json:"featLimit"`
-	ExpiresAt  string `json:"expiresAt"`
-	ExpiresAtF string `json:"expiresAtFmt"`
+	Status       string `json:"status"`
+	OrgName      string `json:"org_name"`
+	AllowedHosts string `json:"allowed_hosts"`
+	ExpiresAt    string `json:"expires"`
 }
 
 // ConvertSetItems converts []SetItem to []MySetItem
@@ -96,7 +94,8 @@ func (a *App) pullIds(w http.ResponseWriter, req *http.Request) {
 	}
 
 	var body struct {
-		MinTimestamp int64 `json:"minTimestamp"`
+		MinTimestamp int64  `json:"minTimestamp"`
+		FileName     string `json:"fileName"`
 	}
 
 	if err := json.NewDecoder(req.Body).Decode(&body); err != nil {
@@ -106,16 +105,23 @@ func (a *App) pullIds(w http.ResponseWriter, req *http.Request) {
 
 	// Convert MinTimestamp from int64 to float64
 	minTimestampFloat := float64(body.MinTimestamp)
+	fileName := body.FileName
 
 	//   maxScore := "+inf"
 
 	// Retrieve members of the sorted set within the specified score range
 
-	DB := GetDB()
+	//DB := GetDB()
+	DB, err0 := database.GetDB("./public/seed/" + fileName + ".db")
+	if err0 != nil {
+		log.DefaultLogger.Error("Failed to get database connection:", "filename", fileName, "error", err0)
+		http.Error(w, "failed to get database connection", http.StatusInternalServerError)
+		return
+	}
 
-	maxEl, err := DB.ZSet().RangeWith("lastIds").ByRank(0, 0).Desc().Run()
-	if err != nil {
-		log.DefaultLogger.Error(fmt.Sprintf("Failed !!!!!!!!!!!!!! lastIds fial!! : %v", err))
+	maxEl, err1 := DB.ZSet().RangeWith("lastIds").ByRank(0, 0).Desc().Run()
+	if err1 != nil {
+		log.DefaultLogger.Error(fmt.Sprintf("Failed !!!!!!!!!!!!!! lastIds fial!! : %v", err1))
 	}
 
 	var maxScore float64
@@ -126,9 +132,9 @@ func (a *App) pullIds(w http.ResponseWriter, req *http.Request) {
 	log.DefaultLogger.Info(fmt.Sprintf("minTimestampFloat: %+v", minTimestampFloat))
 	log.DefaultLogger.Info(fmt.Sprintf("MaxScore: %+v", maxScore))
 
-	setItems, err := DB.ZSet().RangeWith("lastIds").ByScore(minTimestampFloat, maxScore).Run()
-	if err != nil {
-		panic(err)
+	setItems, err2 := DB.ZSet().RangeWith("lastIds").ByScore(minTimestampFloat, maxScore).Run()
+	if err2 != nil {
+		panic(err2)
 	}
 
 	var customSetItems []SetItem
@@ -180,7 +186,8 @@ func (a *App) pullEdges(w http.ResponseWriter, req *http.Request) {
 	}
 
 	var body struct {
-		MinTimestamp int64 `json:"minTimestamp"`
+		MinTimestamp int64  `json:"minTimestamp"`
+		FileName     string `json:"fileName"`
 	}
 
 	if err := json.NewDecoder(req.Body).Decode(&body); err != nil {
@@ -195,7 +202,14 @@ func (a *App) pullEdges(w http.ResponseWriter, req *http.Request) {
 
 	// Retrieve members of the sorted set within the specified score range
 
-	DB := GetDB()
+	//DB := GetDB()
+	fileName := body.FileName
+	DB, err0 := database.GetDB("./public/seed/" + fileName + ".db")
+	if err0 != nil {
+		log.DefaultLogger.Error("Failed to get database connection:", "filename", fileName, "error", err0)
+		http.Error(w, "failed to get database connection", http.StatusInternalServerError)
+		return
+	}
 
 	maxEl, err := DB.ZSet().RangeWith("lastEdges").ByRank(0, 0).Desc().Run()
 	var maxScore float64
@@ -295,7 +309,8 @@ func (a *App) pushIds(w http.ResponseWriter, req *http.Request) {
 	}
 
 	var body struct {
-		NewDocs []NewIdDoc `json:"newDocs"`
+		NewDocs  []NewIdDoc `json:"newDocs"`
+		FileName string     `json:"fileName"`
 	}
 
 	if err := json.NewDecoder(req.Body).Decode(&body); err != nil {
@@ -308,7 +323,14 @@ func (a *App) pushIds(w http.ResponseWriter, req *http.Request) {
 	for _, item := range NewDocs {
 		// Retrieve the string value from Redis using the key from Elem property
 
-		DB := GetDB()
+		//DB := GetDB()
+		fileName := body.FileName
+		DB, err0 := database.GetDB("./public/seed/" + fileName + ".db")
+		if err0 != nil {
+			log.DefaultLogger.Error("Failed to get database connection:", "filename", fileName, "error", err0)
+			http.Error(w, "failed to get database connection", http.StatusInternalServerError)
+			return
+		}
 
 		err := DB.Str().Set(item.TsId, item.Name)
 		if err != nil {
@@ -343,7 +365,8 @@ func (a *App) pushEdges(w http.ResponseWriter, req *http.Request) {
 	}
 
 	var body struct {
-		NewDocs []NewEdgeDoc `json:"newDocs"`
+		NewDocs  []NewEdgeDoc `json:"newDocs"`
+		FileName string       `json:"fileName"`
 	}
 
 	if err := json.NewDecoder(req.Body).Decode(&body); err != nil {
@@ -370,7 +393,14 @@ func (a *App) pushEdges(w http.ResponseWriter, req *http.Request) {
 			hashValues["isEph"] = *item.IsEphemeral
 		}
 
-		DB := GetDB()
+		//DB := GetDB()
+		fileName := body.FileName
+		DB, err0 := database.GetDB("./public/seed/" + fileName + ".db")
+		if err0 != nil {
+			log.DefaultLogger.Error("Failed to get database connection:", "filename", fileName, "error", err0)
+			http.Error(w, "failed to get database connection", http.StatusInternalServerError)
+			return
+		}
 
 		_, err := DB.Hash().SetMany(item.Id, hashValues)
 
@@ -410,9 +440,9 @@ func (a *App) handlePing(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	secretKey := JWT_SECRET_KEY
+	publicKey := JWT_PUBLIC_KEY
 
-	claims, err := util.DecodeToken(tokenString, secretKey)
+	claims, err := util.DecodeToken(tokenString, publicKey)
 	if err != nil {
 		writeErrorResponse(w, fmt.Sprintf("Invalid license token: %v %v", err, tokenString))
 		return
@@ -429,13 +459,12 @@ func (a *App) handlePing(w http.ResponseWriter, req *http.Request) {
 }
 
 func writeErrorResponse(w http.ResponseWriter, errorMsg string) {
+
 	response := Response{
-		Status:     errorMsg,
-		OrgName:    "invalid token",
-		DomainName: "invalid token",
-		FeatLimit:  0,
-		ExpiresAt:  "invalid token",
-		ExpiresAtF: "invalid token",
+		Status:       errorMsg,
+		OrgName:      "invalid token",
+		AllowedHosts: "invalid token",
+		ExpiresAt:    "invalid token",
 	}
 	writeJSONResponse(w, response)
 }
@@ -443,14 +472,18 @@ func writeErrorResponse(w http.ResponseWriter, errorMsg string) {
 func createResponseFromClaims(claims *util.Claims, tokenString string) Response {
 	actualClaims := *claims
 	expirationTime := actualClaims.ExpiresAt
-	expirationTimeF := time.Unix(expirationTime, 0).Format("2006-01-02 15:04:05 MST")
+
+	// extract domains only, ignore the Allow flag
+	domains := make([]string, len(actualClaims.AllowedHosts))
+	for i, h := range actualClaims.AllowedHosts {
+		domains[i] = h.Domain
+	}
+	allowedHostsStr := strings.Join(domains, ", ")
 
 	response := Response{
-		OrgName:    actualClaims.OrgName,
-		DomainName: actualClaims.DomainName,
-		FeatLimit:  actualClaims.FeatLimit,
-		ExpiresAt:  fmt.Sprintf("%d", expirationTime),
-		ExpiresAtF: expirationTimeF,
+		OrgName:      actualClaims.OrgName,
+		AllowedHosts: allowedHostsStr,
+		ExpiresAt:    fmt.Sprintf("%d", expirationTime),
 	}
 
 	if time.Now().After(time.Unix(expirationTime, 0)) {
@@ -503,9 +536,21 @@ func (a *App) registerRoutes(r *mux.Router) {
 	r.HandleFunc("/ping", a.handlePing)
 	r.HandleFunc("/echo", a.handleEcho)
 
-	secretKey := JWT_SECRET_KEY
+	//orgName := "demo-org"
+	//domain := "https://play.mapgl.org"
+	//
+	//tokenString, expirationTime, err := util.GenerateJWT(orgName, domain, publicKey)
+	//if err != nil {
+	//	log.DefaultLogger.Info("Error creating token:", err)
+	//	return
+	//}
+	//
+	//log.DefaultLogger.Info(fmt.Sprintf("Generated Token: %s", tokenString))
+	//log.DefaultLogger.Info(fmt.Sprintf("Gen token expires at: %s", time.Unix(expirationTime, 0)))
 
-	if util.IsValidToken(a.MapglSettings.ApiToken, secretKey) { //  tokenString
+	publicKey := JWT_PUBLIC_KEY
+
+	if util.IsValidToken(a.MapglSettings.ApiToken, publicKey) { //  tokenString
 
 		r.HandleFunc("/pullIds", a.pullIds)
 		r.HandleFunc("/pushIds", a.pushIds)

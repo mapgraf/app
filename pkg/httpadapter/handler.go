@@ -67,6 +67,7 @@ func withPluginContext(ctx context.Context, pluginCtx backend.PluginContext) con
 	return context.WithValue(ctx, pluginConfigKey{}, pluginCtx)
 }
 
+// PluginConfigFromContext returns backend.PluginConfig from context.
 func PluginConfigFromContext(ctx context.Context) backend.PluginContext {
 	v := ctx.Value(pluginConfigKey{})
 	if v == nil {
@@ -82,6 +83,7 @@ func withUser(ctx context.Context, cfg *backend.User) context.Context {
 	return context.WithValue(ctx, userKey{}, cfg)
 }
 
+// UserFromContext returns backend.User from context.
 func UserFromContext(ctx context.Context) *backend.User {
 	v := ctx.Value(userKey{})
 	if v == nil {

@@ -7,7 +7,7 @@
   "executable": "gpx_mapglapp",
   "info": {
     "keywords": ["app"],
-    "description": "Mapgl app: premium panel + backend app for replication",
+    "description": "Mapgl app: backend for auth and replication",
     "author": {
       "name": "Vaduga"
     },

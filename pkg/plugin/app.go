@@ -2,12 +2,15 @@ package plugin
 
 import (
 	"context"
-	"github.com/gorilla/mux"
 	"github.com/grafana/grafana-plugin-sdk-go/backend"
 	"github.com/grafana/grafana-plugin-sdk-go/backend/instancemgmt"
 	"github.com/grafana/grafana-plugin-sdk-go/backend/log"
 	"mapgl-app/pkg/httpadapter"
 	"mapgl-app/pkg/settings"
+	// 	"net/http"
+	//  	"fmt"
+	"github.com/gorilla/mux"
+	//"mapgl-app/pkg/signal"
 )
 
 // Make sure App implements required interfaces. This is important to do
@@ -62,3 +65,15 @@ func (a *App) CheckHealth(_ context.Context, _ *backend.CheckHealthRequest) (*ba
 		Message: "ok",
 	}, nil
 }
+
+// func (a *App) CallResource(ctx context.Context, req *backend.CallResourceRequest, sender backend.CallResourceResponseSender) error {
+//   u := req.GetHTTPHeaders() //("Connection")
+//  log.DefaultLogger.Info(fmt.Sprintf("Request Headers: %v", u))
+//  log.DefaultLogger.Info(fmt.Sprintf("sender: %v", sender))
+//
+//
+//   return sender.Send(&backend.CallResourceResponse{
+//         Status: http.StatusOK,
+//         Body: []byte(fmt.Sprintf(`{"Hello, world! %d"}`, u)),
+//     })
+// }
