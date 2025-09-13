@@ -4,16 +4,15 @@ package util
 import (
 	"crypto/ed25519"
 	"fmt"
-	"github.com/golang-jwt/jwt/v5"
 	"time"
 
-	"github.com/grafana/grafana-plugin-sdk-go/backend/log"
+	"github.com/golang-jwt/jwt/v5"
 )
 
 type Claims struct {
-	OrgName      string          `json:"org_name"`
-	AllowedHosts HostPermissions `json:"allowed_hosts"`
-	ExpiresAt    int64           `json:"expires"`
+	OrgName      string          `json:"org"`
+	AllowedHosts HostPermissions `json:"hosts"`
+	ExpiresAt    jwt.NumericDate `json:"expiresAt"`
 	jwt.RegisteredClaims
 }
 
@@ -71,25 +70,42 @@ func DecodeToken(tokenString string, publicKey string) (*Claims, error) {
 		return nil, fmt.Errorf("invalid token")
 	}
 
-	// Manual expiry check for custom 'expires' field
-	if claims.ExpiresAt > 0 && time.Now().Unix() > claims.ExpiresAt {
-		return nil, fmt.Errorf("token expired at %d", claims.ExpiresAt)
-	}
-
 	return claims, nil
 }
 
-// IsValidToken checks if the token is valid and not expired
-func IsValidToken(tokenString string, publicKey string) bool {
-	claims, err := DecodeToken(tokenString, publicKey)
-	if err != nil {
-		log.DefaultLogger.Error(err.Error())
-		return false
+func CheckHost(host string, claims *Claims) (HostPermission, error) {
+	for _, h := range claims.AllowedHosts {
+		if h.Domain == host {
+			if !h.IsPower {
+				return h, fmt.Errorf("host %s is not a power host", host)
+			}
+			// Check host-specific expiry
+			if h.ExpiresAt.Time.Before(time.Now()) {
+				return h, fmt.Errorf("host %s permission expired at %d", host, h.ExpiresAt.Time.Unix())
+			}
+			// Host is allowed, has power, and not expired
+			return h, nil
+		}
 	}
 
-	// 	log.DefaultLogger.Info("OrgName:", claims.OrgName)
-	// 	log.DefaultLogger.Info("Now:", time.Unix(time.Now().Unix(), 0))
-	// 	log.DefaultLogger.Info("ExpiresAt:", time.Unix(claims.ExpiresAt, 0))
+	return HostPermission{}, fmt.Errorf("host %s is not allowed", host)
+}
 
-	return time.Now().Unix() < claims.ExpiresAt
+func HasSomePowerHost(tokenString string, publicKey string) (bool, error) {
+	claims, err := DecodeToken(tokenString, publicKey)
+	if err != nil {
+		return false, fmt.Errorf("failed to decode token: %w", err)
+	}
+
+	if claims.ExpiresAt.Time.Before(time.Now()) {
+		return false, fmt.Errorf("token expired at %v", claims.ExpiresAt.Time)
+	}
+
+	for _, h := range claims.AllowedHosts {
+		if h.IsPower && h.ExpiresAt.Time.After(time.Now()) {
+			return true, nil
+		}
+	}
+
+	return false, nil
 }

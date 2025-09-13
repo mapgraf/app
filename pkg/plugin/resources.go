@@ -3,15 +3,16 @@ package plugin
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/gorilla/mux"
-	"github.com/grafana/grafana-plugin-sdk-go/backend/log"
 	"mapgl-app/pkg/database"
 	"mapgl-app/pkg/util"
-	_ "modernc.org/sqlite"
 	"net/http"
 	"strconv"
-	"strings"
 	"time"
+
+	"github.com/golang-jwt/jwt/v5"
+	"github.com/gorilla/mux"
+	"github.com/grafana/grafana-plugin-sdk-go/backend/log"
+	_ "modernc.org/sqlite"
 )
 
 //var (
@@ -64,10 +65,10 @@ type NewEdgeDoc struct {
 }
 
 type Response struct {
-	Status       string `json:"status"`
-	OrgName      string `json:"org_name"`
-	AllowedHosts string `json:"allowed_hosts"`
-	ExpiresAt    string `json:"expires"`
+	Status    string          `json:"status"`
+	OrgName   string          `json:"org"`
+	Host      string          `json:"host"`
+	ExpiresAt jwt.NumericDate `json:"expiresAt"`
 }
 
 // ConvertSetItems converts []SetItem to []MySetItem
@@ -440,7 +441,19 @@ func (a *App) handlePing(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
+	var body struct {
+		Host string `json:"host"`
+	}
+
+	if err := json.NewDecoder(req.Body).Decode(&body); err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	// Convert MinTimestamp from int64 to float64
+
 	publicKey := JWT_PUBLIC_KEY
+	host := body.Host
 
 	claims, err := util.DecodeToken(tokenString, publicKey)
 	if err != nil {
@@ -448,7 +461,7 @@ func (a *App) handlePing(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	response := createResponseFromClaims(claims, tokenString)
+	response := createResponseFromClaims(host, claims, tokenString)
 	if response.Status == "token expired: "+tokenString {
 		w.WriteHeader(http.StatusOK)
 	} else {
@@ -461,35 +474,34 @@ func (a *App) handlePing(w http.ResponseWriter, req *http.Request) {
 func writeErrorResponse(w http.ResponseWriter, errorMsg string) {
 
 	response := Response{
-		Status:       errorMsg,
-		OrgName:      "invalid token",
-		AllowedHosts: "invalid token",
-		ExpiresAt:    "invalid token",
+		Status:    errorMsg,
+		OrgName:   "invalid token",
+		Host:      "invalid token",
+		ExpiresAt: jwt.NumericDate{Time: time.Now()},
 	}
 	writeJSONResponse(w, response)
 }
 
-func createResponseFromClaims(claims *util.Claims, tokenString string) Response {
-	actualClaims := *claims
-	expirationTime := actualClaims.ExpiresAt
-
-	// extract domains only, ignore the Allow flag
-	domains := make([]string, len(actualClaims.AllowedHosts))
-	for i, h := range actualClaims.AllowedHosts {
-		domains[i] = h.Domain
-	}
-	allowedHostsStr := strings.Join(domains, ", ")
-
+func createResponseFromClaims(host string, claims *util.Claims, tokenString string) Response {
 	response := Response{
-		OrgName:      actualClaims.OrgName,
-		AllowedHosts: allowedHostsStr,
-		ExpiresAt:    fmt.Sprintf("%d", expirationTime),
+		OrgName:   claims.OrgName,
+		Host:      host,
+		ExpiresAt: claims.ExpiresAt, // assign directly
 	}
 
-	if time.Now().After(time.Unix(expirationTime, 0)) {
-		response.Status = "token expired: " + tokenString
-	} else {
+	// Check host permissions
+	hostPerm, err := util.CheckHost(host, claims)
+	if err == nil {
+		// hostPerm is valid; override expiration
+		response.ExpiresAt = hostPerm.ExpiresAt
 		response.Status = "token valid: " + tokenString
+	} else {
+		response.Status = fmt.Sprintf("token invalid: %s (%v)", tokenString, err)
+	}
+
+	// Extra safety: mark expired token
+	if response.ExpiresAt.Time.Before(time.Now()) {
+		response.Status = "token expired: " + tokenString
 	}
 
 	return response
@@ -536,29 +548,17 @@ func (a *App) registerRoutes(r *mux.Router) {
 	r.HandleFunc("/ping", a.handlePing)
 	r.HandleFunc("/echo", a.handleEcho)
 
-	//orgName := "demo-org"
-	//domain := "https://play.mapgl.org"
-	//
-	//tokenString, expirationTime, err := util.GenerateJWT(orgName, domain, publicKey)
-	//if err != nil {
-	//	log.DefaultLogger.Info("Error creating token:", err)
-	//	return
-	//}
-	//
-	//log.DefaultLogger.Info(fmt.Sprintf("Generated Token: %s", tokenString))
-	//log.DefaultLogger.Info(fmt.Sprintf("Gen token expires at: %s", time.Unix(expirationTime, 0)))
+	//log.DefaultLogger.Info(fmt.Sprintf("Test. Gen token expires at: %s", time.Unix(expirationTime, 0)))
 
 	publicKey := JWT_PUBLIC_KEY
 
-	if util.IsValidToken(a.MapglSettings.ApiToken, publicKey) { //  tokenString
-
+	if ok, _ := util.HasSomePowerHost(a.MapglSettings.ApiToken, publicKey); ok {
 		r.HandleFunc("/pullIds", a.pullIds)
 		r.HandleFunc("/pushIds", a.pushIds)
 		r.HandleFunc("/pushEdges", a.pushEdges)
 		r.HandleFunc("/pullEdges", a.pullEdges)
-
 	} else {
-		log.DefaultLogger.Info("Invalid token")
+		log.DefaultLogger.Info("Not a power host")
 	}
 
 }
