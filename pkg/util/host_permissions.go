@@ -42,10 +42,9 @@ func (hp *HostPermissions) UnmarshalJSON(data []byte) error {
 		var expiresAt jwt.NumericDate
 		switch v := flat[i+1].(type) {
 		case float64:
-			// JSON numbers are float64
-			expiresAt = jwt.NumericDate{Time: time.Unix(int64(v), 0)}
-		default:
-			return fmt.Errorf("expected number at index %d, got %T", i+1, flat[i+1])
+			// JSON numbers come as float64 → cast to int64 seconds
+			sec := int64(v)
+			expiresAt = *jwt.NewNumericDate(time.Unix(sec, 0))
 		}
 
 		// isPower

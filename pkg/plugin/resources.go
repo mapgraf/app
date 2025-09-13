@@ -9,7 +9,6 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/golang-jwt/jwt/v5"
 	"github.com/gorilla/mux"
 	"github.com/grafana/grafana-plugin-sdk-go/backend/log"
 	_ "modernc.org/sqlite"
@@ -65,10 +64,12 @@ type NewEdgeDoc struct {
 }
 
 type Response struct {
-	Status    string          `json:"status"`
-	OrgName   string          `json:"org"`
-	Host      string          `json:"host"`
-	ExpiresAt jwt.NumericDate `json:"expiresAt"`
+	Status    string `json:"status"`
+	OrgName   string `json:"org"`
+	Host      string `json:"host"`
+	IsPower   bool   `json:"isPower"`
+	Token     string `json:"token"`
+	ExpiresAt int64  `json:"expiresAt"`
 }
 
 // ConvertSetItems converts []SetItem to []MySetItem
@@ -450,8 +451,6 @@ func (a *App) handlePing(w http.ResponseWriter, req *http.Request) {
 		return
 	}
 
-	// Convert MinTimestamp from int64 to float64
-
 	publicKey := JWT_PUBLIC_KEY
 	host := body.Host
 
@@ -477,7 +476,8 @@ func writeErrorResponse(w http.ResponseWriter, errorMsg string) {
 		Status:    errorMsg,
 		OrgName:   "invalid token",
 		Host:      "invalid token",
-		ExpiresAt: jwt.NumericDate{Time: time.Now()},
+		ExpiresAt: time.Now().Unix(),
+		IsPower:   false,
 	}
 	writeJSONResponse(w, response)
 }
@@ -486,23 +486,40 @@ func createResponseFromClaims(host string, claims *util.Claims, tokenString stri
 	response := Response{
 		OrgName:   claims.OrgName,
 		Host:      host,
-		ExpiresAt: claims.ExpiresAt, // assign directly
+		Token:     tokenString,
+		ExpiresAt: claims.ExpiresAt.Time.Unix(), // global token expire
+		IsPower:   false,
 	}
 
-	// Check host permissions
 	hostPerm, err := util.CheckHost(host, claims)
+
 	if err == nil {
-		// hostPerm is valid; override expiration
-		response.ExpiresAt = hostPerm.ExpiresAt
-		response.Status = "token valid: " + tokenString
+		// valid
+		response.Status = "token valid"
+
 	} else {
-		response.Status = fmt.Sprintf("token invalid: %s (%v)", tokenString, err)
+		response.Status = fmt.Sprintf(
+			"token invalid: %s (exp: %v, err: %v)",
+			claims.ExpiresAt.Time.Unix(),
+			err,
+		)
+	}
+
+	if hostPerm.Domain != "" { // we found a host entry
+		// hostPerm is valid; override expiration
+		exp := hostPerm.ExpiresAt            //.Time.Unix()
+		response.ExpiresAt = exp.Time.Unix() // always overwrite
+		if exp.Time.Before(time.Now()) {
+			response.Status += ". Host expired: " + fmt.Sprintf("%d", response.ExpiresAt)
+		} else {
+			response.IsPower = true
+		}
 	}
 
 	// Extra safety: mark expired token
-	if response.ExpiresAt.Time.Before(time.Now()) {
-		response.Status = "token expired: " + tokenString
-	}
+	//if claims.ExpiresAt.Time.Before(time.Now()) {
+	//	response.Status = "global token expired: " + tokenString
+	//}
 
 	return response
 }
@@ -520,8 +537,6 @@ func writeJSONResponse(w http.ResponseWriter, response Response) {
 	}
 }
 
-// handleEcho is an example HTTP POST resource that accepts a JSON with a "message" key and
-// returns to the client whatever it is sent.
 func (a *App) handleEcho(w http.ResponseWriter, req *http.Request) {
 	if req.Method != http.MethodPost {
 		http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
@@ -542,23 +557,22 @@ func (a *App) handleEcho(w http.ResponseWriter, req *http.Request) {
 	w.WriteHeader(http.StatusOK)
 }
 
-// registerRoutes takes a *http.ServeMux and registers some HTTP handlers.
 func (a *App) registerRoutes(r *mux.Router) {
 
 	r.HandleFunc("/ping", a.handlePing)
 	r.HandleFunc("/echo", a.handleEcho)
 
-	//log.DefaultLogger.Info(fmt.Sprintf("Test. Gen token expires at: %s", time.Unix(expirationTime, 0)))
+	r.HandleFunc("/pullIds", a.pullIds)
+	r.HandleFunc("/pullEdges", a.pullEdges)
 
 	publicKey := JWT_PUBLIC_KEY
-
 	if ok, _ := util.HasSomePowerHost(a.MapglSettings.ApiToken, publicKey); ok {
-		r.HandleFunc("/pullIds", a.pullIds)
 		r.HandleFunc("/pushIds", a.pushIds)
 		r.HandleFunc("/pushEdges", a.pushEdges)
-		r.HandleFunc("/pullEdges", a.pullEdges)
 	} else {
 		log.DefaultLogger.Info("Not a power host")
 	}
+
+	//log.DefaultLogger.Info(fmt.Sprintf("Test. Gen token expires at: %s", time.Unix(expirationTime, 0)))
 
 }

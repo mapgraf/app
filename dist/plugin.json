@@ -9,7 +9,7 @@
         "keywords": [
             "app"
         ],
-        "description": "Mapgl app: premium panel + backend app for replication",
+        "description": "Backend for auth and visual editor replication",
         "author": {
             "name": "Vaduga"
         },
@@ -19,7 +19,7 @@
         },
         "screenshots": [],
         "version": "1.0.0",
-        "updated": "2025-09-11"
+        "updated": "2025-09-13"
     },
     "includes": [
         {
