@@ -496,7 +496,7 @@ func createResponseFromClaims(host string, claims *util.Claims, tokenString stri
 	if err == nil {
 		// valid
 		response.Status = "token valid"
-
+		response.IsPower = true
 	} else {
 		response.Status = fmt.Sprintf(
 			"token invalid: %s (exp: %v, err: %v)",
@@ -511,8 +511,6 @@ func createResponseFromClaims(host string, claims *util.Claims, tokenString stri
 		response.ExpiresAt = exp.Time.Unix() // always overwrite
 		if exp.Time.Before(time.Now()) {
 			response.Status += ". Host expired: " + fmt.Sprintf("%d", response.ExpiresAt)
-		} else {
-			response.IsPower = true
 		}
 	}
 
