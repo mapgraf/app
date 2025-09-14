@@ -516,10 +516,10 @@ func createResponseFromClaims(host string, claims *util.Claims, tokenString stri
 		}
 	}
 
-	// Extra safety: mark expired token
-	//if claims.ExpiresAt.Time.Before(time.Now()) {
-	//	response.Status = "global token expired: " + tokenString
-	//}
+	if claims.ExpiresAt.Time.Before(time.Now()) {
+		response.ExpiresAt = claims.ExpiresAt.Time.Unix()
+		response.Status += ". Global token expired: " + fmt.Sprintf("%d", claims.ExpiresAt.Time.Unix())
+	}
 
 	return response
 }
