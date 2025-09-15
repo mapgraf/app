@@ -28,7 +28,7 @@ lib-cov
 coverage
 
 # Compiled binary addons (https://nodejs.org/api/addons.html)
-dist_comm/
+#dist_comm/
 dist_lite/
 artifacts/
 work/
