@@ -1,0 +1,2243 @@
+{
+  "annotations": {
+    "list": [
+      {
+        "builtIn": 1,
+        "datasource": {
+          "type": "grafana",
+          "uid": "-- Grafana --"
+        },
+        "enable": true,
+        "hide": true,
+        "iconColor": "rgba(0, 211, 255, 1)",
+        "name": "Annotations & Alerts",
+        "target": {
+          "limit": 200,
+          "matchAny": false,
+          "tags": [],
+          "type": "dashboard"
+        },
+        "type": "dashboard"
+      }
+    ]
+  },
+  "editable": true,
+  "fiscalYearStartMonth": 0,
+  "graphTooltip": 1,
+  "id": 19,
+  "links": [],
+  "liveNow": false,
+  "panels": [
+    {
+      "datasource": {
+        "type": "datasource",
+        "uid": "-- Dashboard --"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            }
+          },
+          "links": [
+            {
+              "targetBlank": true,
+              "title": "set target var",
+              "url": "https://play.mapgl.org/d/b69734bb-fc06-4916-8c25-6fb448e60409/mapgl-premium-visual-editor-2b-alerts-history?orgId=1&var-target=${__value.text}﻿"
+            }
+          ],
+          "mappings": [],
+          "thresholds": {
+            "mode": "percentage",
+            "steps": [
+              {
+                "color": "light-green",
+                "value": null
+              },
+              {
+                "color": "yellow",
+                "value": 20
+              },
+              {
+                "color": "#ed8128e6",
+                "value": 30
+              },
+              {
+                "color": "#db5c9e",
+                "value": 40
+              },
+              {
+                "color": "#F2495C",
+                "value": 50
+              },
+              {
+                "color": "#9130ba",
+                "value": 75
+              },
+              {
+                "color": "#C4162A",
+                "value": 100
+              }
+            ]
+          }
+        },
+        "overrides": [
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "bps_rx"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "Bps"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "bps_tx"
+            },
+            "properties": [
+              {
+                "id": "unit",
+                "value": "Bps"
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "stat1"
+            },
+            "properties": [
+              {
+                "id": "mappings",
+                "value": [
+                  {
+                    "options": {
+                      "0": {
+                        "color": "dark-red",
+                        "index": 1,
+                        "text": "DOWN"
+                      },
+                      "1": {
+                        "color": "dark-green",
+                        "index": 0,
+                        "text": "AVAILABLE"
+                      }
+                    },
+                    "type": "value"
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "gridPos": {
+        "h": 21,
+        "w": 18,
+        "x": 0,
+        "y": 0
+      },
+      "id": 12,
+      "options": {
+        "basemap": {
+          "apiKey": "4bdc0d17-2586-457b-ba4e-6fb9f0e902d7",
+          "config": {
+            "theme": "auto"
+          },
+          "name": "Layer 0",
+          "type": "yamaps"
+        },
+        "common": {
+          "arcHeight": 0.3,
+          "isMeters": true,
+          "isShowLegend": true,
+          "locLabelName": "instance",
+          "tiltIncrement": 15
+        },
+        "dataLayers": [
+          {
+            "aggrTypeField": "aggrType",
+            "bandNumber": 1000000,
+            "config": {
+              "arrow": 1,
+              "arrow2": -1,
+              "commentsData": {},
+              "direction": "source",
+              "edgeStyle": {
+                "color": {
+                  "field": "stat1",
+                  "fixed": "dark-green"
+                },
+                "opacity": 1,
+                "size": {
+                  "field": "stat1",
+                  "fixed": 5,
+                  "max": 1.5,
+                  "min": 0.5
+                },
+                "text": {
+                  "field": "edgeId",
+                  "fixed": "",
+                  "mode": "field"
+                },
+                "textConfig": {
+                  "fontSize": 2
+                }
+              },
+              "edgeStyle2": {
+                "In": {
+                  "color": {
+                    "field": "bps_rx",
+                    "fixed": "dark-green"
+                  },
+                  "opacity": 1,
+                  "size": {
+                    "field": "bps_rx",
+                    "fixed": 5,
+                    "max": 1.5,
+                    "min": 0.8
+                  },
+                  "text": {
+                    "fixed": "",
+                    "mode": "field"
+                  }
+                },
+                "Out": {
+                  "color": {
+                    "field": "bps_tx",
+                    "fixed": "dark-green"
+                  },
+                  "opacity": 1,
+                  "size": {
+                    "field": "bps_tx",
+                    "fixed": 5,
+                    "max": 1.5,
+                    "min": 0.1
+                  },
+                  "text": {
+                    "fixed": "fff",
+                    "mode": "field"
+                  }
+                },
+                "color": {
+                  "field": "bps_out",
+                  "fixed": "dark-green"
+                },
+                "opacity": 1,
+                "size": {
+                  "field": "bps_out",
+                  "fixed": 5,
+                  "max": 2,
+                  "min": 0.6
+                },
+                "text": {
+                  "field": "bps_out",
+                  "fixed": "",
+                  "mode": "field"
+                }
+              },
+              "jitterPoints": false,
+              "searchProperties": [],
+              "showStat2": true,
+              "style": {
+                "color": {
+                  "field": "stat1",
+                  "fixed": "dark-green"
+                },
+                "opacity": 0.6,
+                "size": {
+                  "field": "stat1",
+                  "fixed": 10,
+                  "max": 25,
+                  "min": 5
+                },
+                "text": {
+                  "field": "vertexA",
+                  "fixed": "",
+                  "mode": "field"
+                },
+                "textConfig": {
+                  "fontSize": 15
+                }
+              },
+              "useExtThresholds": true,
+              "useExtThresholds2": false,
+              "vertices": {}
+            },
+            "displayProperties": [
+              "edgeId",
+              "stat1",
+              "bps_rx",
+              "bps_tx",
+              "someProp"
+            ],
+            "edgeIdField": "edgeId",
+            "edgeLabelField": "bps",
+            "id": "markers",
+            "isShowTooltip": true,
+            "locField": "vertexA",
+            "location": {
+              "mode": "auto"
+            },
+            "metricField": "stat1",
+            "name": "switches & aggrNodes",
+            "parField": "vertexB_path",
+            "type": "markers"
+          }
+        ],
+        "globalThresholdsConfig": [
+          {
+            "color": "rgba(154, 205, 50)",
+            "label": "Base"
+          },
+          {
+            "color": "rgb(196, 22, 42)",
+            "label": "down",
+            "lineWidth": 0.4,
+            "overrides": [],
+            "value": 0
+          },
+          {
+            "color": "rgba(66, 140, 117, 0.81)",
+            "label": "alerting_instances",
+            "lineWidth": 1,
+            "overrides": [
+              {
+                "name": "someProp",
+                "type": "string",
+                "value": "alerting_instance"
+              }
+            ],
+            "value": 1
+          },
+          {
+            "color": "rgba(71, 134, 230, 0.76)",
+            "label": "aggr_nodes",
+            "overrides": [
+              {
+                "name": "aggrType",
+                "type": "string",
+                "value": "node, connector"
+              }
+            ],
+            "value": 1
+          },
+          {
+            "color": "rgb(85, 12, 107)",
+            "label": "upstream",
+            "lineWidth": 0.5,
+            "overrides": [
+              {
+                "name": "target",
+                "type": "string",
+                "value": "TTK"
+              },
+              {
+                "name": "aggrType",
+                "type": "string",
+                "value": "node"
+              }
+            ],
+            "value": 1
+          },
+          {
+            "color": "rgb(184, 119, 217)",
+            "label": "connector",
+            "lineWidth": 0.5,
+            "overrides": [
+              {
+                "name": "aggrType",
+                "type": "string",
+                "value": "connector"
+              }
+            ],
+            "value": 1
+          },
+          {
+            "color": "rgb(105, 191, 144)",
+            "label": "up",
+            "lineWidth": 0.4,
+            "overrides": [],
+            "value": 1
+          },
+          {
+            "color": "rgba(210, 118, 43, 0.72)",
+            "label": "exception color",
+            "lineWidth": 0.5,
+            "overrides": [
+              {
+                "name": "target",
+                "type": "string",
+                "value": "U29"
+              }
+            ],
+            "value": 1
+          },
+          {
+            "color": "rgba(92, 170, 204, 0.92)",
+            "label": "info",
+            "lineWidth": 0.5,
+            "overrides": [],
+            "value": 2
+          },
+          {
+            "color": "rgb(224, 180, 0)",
+            "label": "warning",
+            "lineWidth": 0.5,
+            "overrides": [],
+            "value": 3
+          }
+        ],
+        "isEditable": true,
+        "isGeocoder": false,
+        "roomID": "mapgl-data.db",
+        "svgIconsConfig": [
+          {
+            "iconName": "networking/wireless-access-point",
+            "iconRuleCollapsed": true,
+            "iconRuleLabel": "wireless",
+            "iconSize": 25,
+            "iconVOffset": -5,
+            "overrides": [
+              {
+                "name": "vertexA",
+                "type": "string",
+                "value": "10.250.2.24, 10.250.2.25, 10.250.2.36"
+              }
+            ]
+          },
+          {
+            "iconName": "databases/rxdb",
+            "iconRuleCollapsed": true,
+            "iconRuleLabel": "rxdb servers",
+            "iconSize": 25,
+            "iconVOffset": -5,
+            "overrides": [
+              {
+                "name": "vertexA",
+                "type": "string",
+                "value": "10.250.2.35, 10.250.2.16"
+              }
+            ]
+          },
+          {
+            "iconName": "cisco/layer-3-switch",
+            "iconRuleCollapsed": false,
+            "iconRuleLabel": "layer3 switches",
+            "iconSize": 15,
+            "iconVOffset": -5,
+            "overrides": []
+          },
+          {
+            "iconName": "cisco/atm-fast-gigabit",
+            "iconRuleCollapsed": true,
+            "iconRuleLabel": "fast gigabit",
+            "iconSize": 20,
+            "iconVOffset": -5,
+            "overrides": [
+              {
+                "name": "aggrType",
+                "type": "string",
+                "value": "node"
+              }
+            ]
+          },
+          {
+            "iconName": "databases/aws-mobile-hub",
+            "iconRuleCollapsed": false,
+            "iconRuleLabel": "new rule",
+            "iconSize": 30,
+            "iconVOffset": -5,
+            "overrides": [
+              {
+                "name": "vertexA",
+                "type": "string",
+                "value": "new11"
+              }
+            ]
+          }
+        ],
+        "updatesLog": true,
+        "view": {
+          "allLayers": true,
+          "id": "fit",
+          "lastOnly": false,
+          "lat": 40,
+          "layer": "switches & aggrNodes",
+          "lon": -100,
+          "padding": 75,
+          "zoom": 17
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "datasource",
+            "uid": "-- Dashboard --"
+          },
+          "panelId": 2,
+          "refId": "A"
+        }
+      ],
+      "title": "Mapgl network , metrics & alerts",
+      "type": "mapglplus-panel"
+    },
+    {
+      "datasource": {
+        "type": "testdata",
+        "uid": "d40c5bce-8f09-4ea0-b7f0-e5cde4bed387"
+      },
+      "fieldConfig": {
+        "defaults": {
+          "color": {
+            "mode": "palette-classic"
+          },
+          "custom": {
+            "axisCenteredZero": false,
+            "axisColorMode": "text",
+            "axisGridShow": false,
+            "axisLabel": "",
+            "axisPlacement": "right",
+            "barAlignment": 0,
+            "drawStyle": "line",
+            "fillOpacity": 0,
+            "gradientMode": "none",
+            "hideFrom": {
+              "legend": false,
+              "tooltip": false,
+              "viz": false
+            },
+            "insertNulls": false,
+            "lineInterpolation": "linear",
+            "lineWidth": 1,
+            "pointSize": 5,
+            "scaleDistribution": {
+              "type": "linear"
+            },
+            "showPoints": "auto",
+            "spanNulls": false,
+            "stacking": {
+              "group": "A",
+              "mode": "none"
+            },
+            "thresholdsStyle": {
+              "mode": "off"
+            }
+          },
+          "displayName": "map timecontrol",
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 4,
+        "w": 6,
+        "x": 18,
+        "y": 0
+      },
+      "id": 11,
+      "options": {
+        "legend": {
+          "calcs": [],
+          "displayMode": "list",
+          "placement": "bottom",
+          "showLegend": true
+        },
+        "tooltip": {
+          "mode": "none",
+          "sort": "none"
+        }
+      },
+      "targets": [
+        {
+          "datasource": {
+            "type": "testdata",
+            "uid": "d40c5bce-8f09-4ea0-b7f0-e5cde4bed387"
+          },
+          "labels": "instance=inst$seriesIndex",
+          "max": 1,
+          "min": 0.1,
+          "noise": 0,
+          "refId": "A",
+          "scenarioId": "random_walk",
+          "seriesCount": 1,
+          "spread": 0.1
+        }
+      ],
+      "title": "Alerting state history crosshair time slider",
+      "type": "timeseries"
+    },
+    {
+      "datasource": {
+        "type": "frser-sqlite-datasource",
+        "uid": "fe0bd71f-ced3-49bf-9f6e-acddae662cc2"
+      },
+      "description": "sync on page load (F5)",
+      "gridPos": {
+        "h": 6,
+        "w": 6,
+        "x": 18,
+        "y": 4
+      },
+      "id": 4,
+      "options": {
+        "buttonGroup": {
+          "orientation": "right",
+          "size": "sm"
+        },
+        "confirmModal": {
+          "body": "Please confirm to update changed values",
+          "cancel": "Cancel",
+          "columns": {
+            "include": [
+              "name",
+              "oldValue",
+              "newValue"
+            ],
+            "name": "Label",
+            "newValue": "New Value",
+            "oldValue": "Old Value"
+          },
+          "confirm": "Confirm",
+          "elementDisplayMode": "modified",
+          "title": "Confirm update request"
+        },
+        "elementValueChanged": "",
+        "elements": [
+          {
+            "id": "target",
+            "labelWidth": 10,
+            "options": [],
+            "optionsSource": "Query",
+            "queryField": {
+              "label": "B:target",
+              "refId": "B",
+              "value": "target"
+            },
+            "queryOptions": {
+              "label": "target",
+              "source": "B",
+              "value": "target"
+            },
+            "section": "",
+            "showIf": "",
+            "title": "target",
+            "tooltip": "",
+            "type": "disabled",
+            "uid": "2ee28f13-32b1-4216-b1e7-eb22353fb1ed",
+            "unit": "",
+            "value": ""
+          },
+          {
+            "id": "source",
+            "labelWidth": 10,
+            "options": [],
+            "optionsSource": "Query",
+            "queryField": {
+              "label": "B:source",
+              "refId": "B",
+              "value": "source"
+            },
+            "queryOptions": {
+              "label": "source",
+              "source": "B",
+              "value": "source"
+            },
+            "section": "",
+            "title": "source",
+            "tooltip": "",
+            "type": "disabled",
+            "uid": "16a7543e-15e4-465f-9bde-d218c1376adc",
+            "unit": "",
+            "value": ""
+          },
+          {
+            "id": "parPath",
+            "labelWidth": 10,
+            "options": [],
+            "optionsSource": "Query",
+            "queryField": {
+              "label": "B:value",
+              "refId": "B",
+              "value": "value"
+            },
+            "queryOptions": {
+              "label": "value",
+              "source": "B",
+              "value": "value"
+            },
+            "section": "",
+            "title": "srcPath",
+            "tooltip": "",
+            "type": "disabled",
+            "uid": "bfb8ca7f-2ed3-43e1-87ec-4123f8c1ddc2",
+            "unit": "",
+            "value": ""
+          },
+          {
+            "id": "deleted",
+            "labelWidth": 10,
+            "section": "",
+            "showIf": "",
+            "title": "deleted",
+            "tooltip": "mark as deleted",
+            "type": "boolean",
+            "uid": "2f7e70e7-64c7-46a6-bd20-da6eeb6fec84",
+            "unit": "",
+            "value": false,
+            "width": 10
+          }
+        ],
+        "initial": {
+          "code": "const delField = context.panel.elements.find(el => el.id === 'deleted')\n\nif (!delField) { return }\n\nconst comboKeyId = '$target-$source'\n\n\nconst series = context.panel.data?.series[0]; // Assuming you're dealing with the first series\n\n// Step 1: Identify the indices. \nconst keyIdIndex = series.fields.findIndex(field => field.name === 'combined_key');\nconst fieldIndex = series.fields.findIndex(field => field.name === 'field');\nconst valueIndex = series.fields.findIndex(field => field.name === 'value');\n\n\n\n// Step 2: Filter by 'comboKeyId'\nconst filteredIndices = [];\nfor (let i = 0; i < series.fields[keyIdIndex].values.length; i++) {\n  if (series.fields[keyIdIndex].values[i] === comboKeyId) {\n    filteredIndices.push(i);\n  }\n}\n\n\n// Step 3: Search for records where 'field' equals 'deleted'\nconst deletedRecords = filteredIndices.filter(index =>\n  series.fields[fieldIndex].values[index] === 'deleted'\n).map(index => {\n  return {\n    key_id: series.fields[keyIdIndex].values[index],\n    field: series.fields[fieldIndex].values[index],\n    value: series.fields[valueIndex].values[index],\n  };\n});\n\n\n\n\nif (!deletedRecords.length) { return [] }\n\nconst delVal = deletedRecords[0].value\n\n//console.log('deleted', delVal);\n\nconst pathField = context.panel.elements.find(el => el.id === 'parPath')\n\n// Output the 'deleted' flag\n\nif (delField) {\n  delField.value = parseInt(delVal) ? true : false\n  console.log('delField.value', delField.value)\n}\n\n////\n//console.log(context.panel.data, context.panel.response, context.panel.initial, context.panel.elements);\n\nreturn;\n\n/**\n * Data Source\n * Requires form elements to be defined\n */\nconst dataQuery = context.utils.toDataQueryResponse(context.panel.response);\nconsole.log('dataQuery', dataQuery);",
+          "contentType": "application/json",
+          "datasource": "mapgl-data",
+          "getPayload": "\nconsole.log('initial request payload get')\nreturn\n\nconst edgeId = context.panel.elements.find(el => el.id === 'edge')\n\nif (!edgeId) { return }\n\nconst dataset = context.panel.data?.series?.[0]\n\n\nconst series = context.panel.data?.series[0]; // Assuming you're dealing with the first series\n\n// Step 1: Identify the indices of 'key_id', 'field', and 'value'\nconst keyIdIndex = series.fields.findIndex(field => field.name === 'key_id');\nconst fieldIndex = series.fields.findIndex(field => field.name === 'field');\nconst valueIndex = series.fields.findIndex(field => field.name === 'value');\n\nconsole.log('idxs', keyIdIndex, fieldIndex, valueIndex)\n\n// Assuming you want to filter by a specific key_id value, e.g., 12345\nconst targetKeyId = edgeId;\n\n// Step 2: Filter by 'key_id'\nconst filteredIndices = [];\nfor (let i = 0; i < series.fields[keyIdIndex].values.length; i++) {\n  if (series.fields[keyIdIndex].values[i] === targetKeyId) {\n    filteredIndices.push(i);\n  }\n}\n\n// Step 3: Search for records where 'field' equals 'deleted'\nconst deletedRecords = filteredIndices.filter(index =>\n  series.fields[fieldIndex].values[index] === 'deleted'\n).map(index => {\n  return {\n    key_id: series.fields[keyIdIndex].values[index],\n    field: series.fields[fieldIndex].values[index],\n    value: series.fields[valueIndex].values[index],\n  };\n});\n\n// Output the filtered records\nconsole.log('deletedRecords', deletedRecords);\n\nif (!deletedRecords.length) { return [] }\n\n\n\nconst val = deletedRecords[0].value\nconst parsed = parseInt(val)\nconsole.log('deleted', val)\nconst payload = {}\n\nconst edges = context.panel.elements.forEach(el => {\n  if (el.id === 'deleted') {\n    ocnsole.log('foun del', el.id)\n    payload[el.id] = [{ label: 'deleted', value: parsed ? true : false }]\n    // context.panel.setInitial(payload)\n  }\n})\n\nreturn [{ label: 'deleted', value: parsed ? true : false }]\n\n\n//[parsed? true : false]\n\n\n\n\n\nconsole.log('payload vars')\nconsole.log('ctx elementss', context.panel.elements)\nreturn {}",
+          "highlight": false,
+          "highlightColor": "semi-dark-red",
+          "method": "query",
+          "payload": {
+            "queryText": "SELECT CAST(strftime('%s', 'now', '-1 minute') as INTEGER) as time, 4 as value \nWHERE time >= $__from / 1000 and time < $__to / 1000",
+            "queryType": "table",
+            "rawQueryText": "SELECT CAST(strftime('%s', 'now', '-1 minute') as INTEGER) as time, 4 as value \nWHERE time >= $__from / 1000 and time < $__to / 1000",
+            "timeColumns": [
+              "time",
+              "ts"
+            ]
+          }
+        },
+        "layout": {
+          "orientation": "horizontal",
+          "padding": 7,
+          "sectionVariant": "default",
+          "variant": "single"
+        },
+        "reset": {
+          "backgroundColor": "purple",
+          "foregroundColor": "yellow",
+          "icon": "process",
+          "text": "Reset",
+          "variant": "hidden"
+        },
+        "resetAction": {
+          "code": "if (context.panel.response) {\n  context.grafana.notifySuccess(['Update', 'Values updated successfully.']);\n  context.grafana.locationService.reload();\n} else {\n  context.grafana.notifyError(['Update', 'An error occurred updating values.']);\n}",
+          "confirm": true,
+          "getPayload": "return {}",
+          "mode": "initial",
+          "payload": {}
+        },
+        "saveDefault": {
+          "icon": "save",
+          "text": "Save Default",
+          "variant": "hidden"
+        },
+        "submit": {
+          "backgroundColor": "super-light-blue",
+          "foregroundColor": "super-light-blue",
+          "icon": "cloud-upload",
+          "text": "Submit",
+          "variant": "destructive"
+        },
+        "sync": true,
+        "update": {
+          "code": "",
+          "confirm": true,
+          "contentType": "application/json",
+          "datasource": "mapgl-data",
+          "getPayload": "const payload = {};\n\ncontext.panel.elements.forEach((element) => {\n  if (!element.value) {\n    return;\n  }\n\n  payload[element.id] = element.value;\n})\n\nreturn payload;",
+          "method": "datasource",
+          "payload": {},
+          "payloadMode": "all"
+        },
+        "updateEnabled": "manual"
+      },
+      "pluginVersion": "4.6.0",
+      "targets": [
+        {
+          "datasource": {
+            "type": "frser-sqlite-datasource",
+            "uid": "fe0bd71f-ced3-49bf-9f6e-acddae662cc2"
+          },
+          "hide": false,
+          "queryText": "WITH target_readable AS (\n    SELECT key AS readable_target\n    FROM vstring\n    WHERE value = '$target'\n),\nsource_readable AS (\n    SELECT key AS readable_source\n    FROM vstring\n    WHERE value = '$source'\n)\nSELECT \n     vhash.*,  -- Select all columns from vhash\n    '$target' AS target,\n    '$source' AS source,  \n    '$target' || '-' || '$source' AS combined_key  \nFROM vhash\nWHERE key = (\n    SELECT readable_target || '-' || readable_source\n    FROM target_readable, source_readable)",
+          "queryType": "table",
+          "rawQueryText": "WITH target_readable AS (\n    SELECT key AS readable_target\n    FROM vstring\n    WHERE value = '$target'\n),\nsource_readable AS (\n    SELECT key AS readable_source\n    FROM vstring\n    WHERE value = '$source'\n)\nSELECT \n     vhash.*,  -- Select all columns from vhash\n    '$target' AS target,\n    '$source' AS source,  \n    '$target' || '-' || '$source' AS combined_key  \nFROM vhash\nWHERE key = (\n    SELECT readable_target || '-' || readable_source\n    FROM target_readable, source_readable)",
+          "refId": "B",
+          "timeColumns": [
+            "time",
+            "ts"
+          ]
+        }
+      ],
+      "title": "/usr/share/grafana/public/mapgl-data.db",
+      "type": "volkovlabs-form-panel"
+    },
+    {
+      "datasource": {
+        "type": "datasource",
+        "uid": "grafana"
+      },
+      "gridPos": {
+        "h": 11,
+        "w": 6,
+        "x": 18,
+        "y": 10
+      },
+      "id": 10,
+      "options": {
+        "dedupStrategy": "none",
+        "enableLogDetails": true,
+        "prettifyLogMessage": true,
+        "showCommonLabels": false,
+        "showLabels": false,
+        "showTime": true,
+        "sortOrder": "Descending",
+        "wrapLogMessage": false
+      },
+      "pluginVersion": "10.1.5",
+      "targets": [
+        {
+          "channel": "stream/mystream/upd_metric",
+          "datasource": {
+            "type": "datasource",
+            "uid": "grafana"
+          },
+          "filter": {
+            "fields": []
+          },
+          "queryType": "measurements",
+          "refId": "A"
+        }
+      ],
+      "title": "Grafana live stat1 stream",
+      "type": "logs"
+    },
+    {
+      "datasource": {
+        "uid": "-- Grafana --"
+      },
+      "gridPos": {
+        "h": 11,
+        "w": 18,
+        "x": 0,
+        "y": 21
+      },
+      "id": 2,
+      "options": {
+        "selectedSeries": 0
+      },
+      "targets": [
+        {
+          "datasource": {
+            "uid": "-- Grafana --"
+          },
+          "queryType": "snapshot",
+          "refId": "A",
+          "snapshot": [
+            {
+              "data": {
+                "values": [
+                  [
+                    "TTK",
+                    "U29",
+                    "U41",
+                    "U13",
+                    "U40",
+                    "U21",
+                    "M1",
+                    "U16",
+                    "U11",
+                    "U15",
+                    "U42",
+                    "188.43.32.118",
+                    "U33",
+                    "U26",
+                    "U34",
+                    "M2",
+                    "U22",
+                    "U28",
+                    "U39",
+                    "U17",
+                    "U10",
+                    "U25",
+                    "U6",
+                    "U35",
+                    "U24",
+                    "U2",
+                    "U31",
+                    "U32",
+                    "U30",
+                    "U14",
+                    "U1",
+                    "U4",
+                    "U9",
+                    "U20",
+                    "U19",
+                    "U12",
+                    "U18",
+                    "U27",
+                    "U38",
+                    "U5",
+                    "U23",
+                    "U37",
+                    "U8",
+                    "U36",
+                    "U7",
+                    "U3",
+                    "10.250.2.19",
+                    "10.250.2.18",
+                    "10.250.2.29",
+                    "10.250.2.42",
+                    "10.250.2.49",
+                    "10.250.2.50",
+                    "10.250.2.34",
+                    "10.250.2.33",
+                    "10.250.2.30",
+                    "10.250.2.37",
+                    "10.250.2.38",
+                    "10.250.2.44",
+                    "10.250.2.17",
+                    "10.250.2.45",
+                    "10.250.2.24",
+                    "10.250.2.21",
+                    "10.250.2.11",
+                    "10.250.2.36",
+                    "10.250.2.22",
+                    "10.250.2.16",
+                    "10.250.2.47",
+                    "10.250.2.51",
+                    "10.250.2.20",
+                    "10.250.2.10",
+                    "10.250.2.23",
+                    "10.250.2.35",
+                    "10.250.2.41",
+                    "10.250.2.43",
+                    "10.250.1.3",
+                    "10.250.1.6",
+                    "10.250.1.1",
+                    "10.250.1.2",
+                    "10.250.1.5",
+                    "10.250.2.25",
+                    "10.250.1.4",
+                    "10.250.2.31",
+                    "10.250.2.32",
+                    "10.250.2.28",
+                    "10.250.2.39",
+                    "10.250.2.13",
+                    "10.250.2.26",
+                    "10.250.2.27",
+                    "10.250.2.40",
+                    "10.250.2.14",
+                    "10.250.2.48",
+                    "10.250.2.15",
+                    "10.250.2.12",
+                    "10.250.2.46",
+                    "new11",
+                    "new2",
+                    "new4",
+                    "new8",
+                    "new6",
+                    "new7",
+                    "int_node",
+                    "multisrc_host",
+                    "multisrc_host",
+                    "multisrc_host",
+                    "multisrc_host",
+                    "multisrc_host",
+                    "inst0",
+                    "inst1",
+                    "inst2",
+                    "inst3",
+                    "inst4",
+                    "inst5",
+                    "new1"
+                  ],
+                  [
+                    "{\"coordinates\":[37.561986,55.550559],\"type\":\"Point\"}",
+                    "{\"coordinates\":[37.558583,55.552012],\"type\":\"Point\"}",
+                    "{\"coordinates\":[37.557676,55.551237],\"type\":\"Point\"}",
+                    "{\"coordinates\":[37.558153,55.550612],\"type\":\"Point\"}",
+                    "{\"coordinates\":[37.557022,55.552163],\"type\":\"Point\"}",
+                    "{\"coordinates\":[37.560447,55.550818],\"type\":\"Point\"}",
+                    "{\"coordinates\":[37.563227,55.550969],\"type\":\"Point\"}",
+                    "{\"coordinates\":[37.558895,55.550823],\"type\":\"Point\"}",
+                    "{\"coordinates\":[37.557695,55.550259],\"type\":\"Point\"}",
+                    "{\"coordinates\":[37.556807,55.550675],\"type\":\"Point\"}",
+                    "{\"coordinates\":[37.558108,55.551225],\"type\":\"Point\"}",
+                    "{\"coordinates\":[37.562573,55.550413],\"type\":\"Point\"}",
+                    "{\"coordinates\":[37.559355,55.552806],\"type\":\"Point\"}",
+                    "{\"coordinates\":[37.561152,55.55162],\"type\":\"Point\"}",
+                    "{\"coordinates\":[37.560835,55.552283],\"type\":\"Point\"}",
+                    "{\"coordinates\":[37.561703,55.550838],\"type\":\"Point\"}",
+                    "{\"coordinates\":[37.560941,55.550556],\"type\":\"Point\"}",
+                    "{\"coordinates\":[37.559917,55.552172],\"type\":\"Point\"}",
+                    "{\"coordinates\":[37.562421,55.55107],\"type\":\"Point\"}",
+                    "{\"coordinates\":[37.556797,55.55109],\"type\":\"Point\"}",
+                    "{\"coordinates\":[37.558002,55.550109],\"type\":\"Point\"}",
+                    "{\"coordinates\":[37.56089,55.551518],\"type\":\"Point\"}",
+                    "{\"coordinates\":[37.555594,55.550056],\"type\":\"Point\"}",
+                    "{\"coordinates\":[37.561087,55.552098],\"type\":\"Point\"}",
+                    "{\"coordinates\":[37.559022,55.551803],\"type\":\"Point\"}",
+                    "{\"coordinates\":[37.557392,55.549737],\"type\":\"Point\"}",
+                    "{\"coordinates\":[37.556517,55.551504],\"type\":\"Point\"}",
+                    "{\"coordinates\":[37.559028,55.553037],\"type\":\"Point\"}",
+                    "{\"coordinates\":[37.557807,55.552275],\"type\":\"Point\"}",
+                    "{\"coordinates\":[37.557299,55.550645],\"type\":\"Point\"}",
+                    "{\"coordinates\":[37.557581,55.549443],\"type\":\"Point\"}",
+                    "{\"coordinates\":[37.556322,55.55015],\"type\":\"Point\"}",
+                    "{\"coordinates\":[37.558507,55.549937],\"type\":\"Point\"}",
+                    "{\"coordinates\":[37.555634,55.551763],\"type\":\"Point\"}",
+                    "{\"coordinates\":[37.555653,55.551139],\"type\":\"Point\"}",
+                    "{\"coordinates\":[37.559295,55.5502],\"type\":\"Point\"}",
+                    "{\"coordinates\":[37.555668,55.550853],\"type\":\"Point\"}",
+                    "{\"coordinates\":[37.559529,55.552275],\"type\":\"Point\"}",
+                    "{\"coordinates\":[37.562862,55.551519],\"type\":\"Point\"}",
+                    "{\"coordinates\":[37.5558,55.550226],\"type\":\"Point\"}",
+                    "{\"coordinates\":[37.559409,55.551563],\"type\":\"Point\"}",
+                    "{\"coordinates\":[37.562246,55.551557],\"type\":\"Point\"}",
+                    "{\"coordinates\":[37.555682,55.549634],\"type\":\"Point\"}",
+                    "{\"coordinates\":[37.561994,55.551746],\"type\":\"Point\"}",
+                    "{\"coordinates\":[37.556625,55.549176],\"type\":\"Point\"}",
+                    "{\"coordinates\":[37.556872,55.549975],\"type\":\"Point\"}",
+                    "{\"coordinates\":[37.560673,55.552173],\"type\":\"Point\"}",
+                    "{\"coordinates\":[37.561292,55.551946],\"type\":\"Point\"}",
+                    "{\"coordinates\":[37.557166,55.550456],\"type\":\"Point\"}",
+                    "{\"coordinates\":[37.558339,55.551186],\"type\":\"Point\"}",
+                    "{\"coordinates\":[37.556704,55.549904],\"type\":\"Point\"}",
+                    "{\"coordinates\":[37.557054,55.549681],\"type\":\"Point\"}",
+                    "{\"coordinates\":[37.558144,55.550712],\"type\":\"Point\"}",
+                    "{\"coordinates\":[37.557485,55.550336],\"type\":\"Point\"}",
+                    "{\"coordinates\":[37.559382,55.550301],\"type\":\"Point\"}",
+                    "{\"coordinates\":[37.555347,55.551738],\"type\":\"Point\"}",
+                    "{\"coordinates\":[37.555411,55.551159],\"type\":\"Point\"}",
+                    "{\"coordinates\":[37.556499,55.548959],\"type\":\"Point\"}",
+                    "{\"coordinates\":[37.561215,55.551733],\"type\":\"Point\"}",
+                    "{\"coordinates\":[37.555477,55.549476],\"type\":\"Point\"}",
+                    "{\"coordinates\":[37.557775,55.551669],\"type\":\"Point\"}",
+                    "{\"coordinates\":[37.559462,55.552854],\"type\":\"Point\"}",
+                    "{\"coordinates\":[37.560907,55.550339],\"type\":\"Point\"}",
+                    "{\"coordinates\":[37.557407,55.55195],\"type\":\"Point\"}",
+                    "{\"coordinates\":[37.559283,55.553076],\"type\":\"Point\"}",
+                    "{\"coordinates\":[37.560723,55.551532],\"type\":\"Point\"}",
+                    "{\"coordinates\":[37.555879,55.550306],\"type\":\"Point\"}",
+                    "{\"coordinates\":[37.5581,55.549301],\"type\":\"Point\"}",
+                    "{\"coordinates\":[37.560446,55.552379],\"type\":\"Point\"}",
+                    "{\"coordinates\":[37.560259,55.550895],\"type\":\"Point\"}",
+                    "{\"coordinates\":[37.558168,55.552345],\"type\":\"Point\"}",
+                    "{\"coordinates\":[37.558977,55.550582],\"type\":\"Point\"}",
+                    "{\"coordinates\":[37.556605,55.551004],\"type\":\"Point\"}",
+                    "{\"coordinates\":[37.55746,55.551407],\"type\":\"Point\"}",
+                    "{\"coordinates\":[37.559855,55.551517],\"type\":\"Point\"}",
+                    "{\"coordinates\":[37.557098,55.549972],\"type\":\"Point\"}",
+                    "{\"coordinates\":[37.560728,55.550883],\"type\":\"Point\"}",
+                    "{\"coordinates\":[37.561422,55.551581],\"type\":\"Point\"}",
+                    "{\"coordinates\":[37.557137,55.551014],\"type\":\"Point\"}",
+                    "{\"coordinates\":[37.559357,55.551327],\"type\":\"Point\"}",
+                    "{\"coordinates\":[37.558012,55.550251],\"type\":\"Point\"}",
+                    "{\"coordinates\":[37.558458,55.549834],\"type\":\"Point\"}",
+                    "{\"coordinates\":[37.558252,55.550093],\"type\":\"Point\"}",
+                    "{\"coordinates\":[37.556713,55.550592],\"type\":\"Point\"}",
+                    "{\"coordinates\":[37.55539,55.550854],\"type\":\"Point\"}",
+                    "{\"coordinates\":[37.563081,55.551436],\"type\":\"Point\"}",
+                    "{\"coordinates\":[37.55922,55.551874],\"type\":\"Point\"}",
+                    "{\"coordinates\":[37.559385,55.55208],\"type\":\"Point\"}",
+                    "{\"coordinates\":[37.556842,55.551479],\"type\":\"Point\"}",
+                    "{\"coordinates\":[37.562608,55.551664],\"type\":\"Point\"}",
+                    "{\"coordinates\":[37.556544,55.550168],\"type\":\"Point\"}",
+                    "{\"coordinates\":[37.562063,55.551878],\"type\":\"Point\"}",
+                    "{\"coordinates\":[37.562163,55.55115],\"type\":\"Point\"}",
+                    "{\"coordinates\":[37.555416,55.549997],\"type\":\"Point\"}",
+                    "{\"coordinates\":[37.560502,55.549999],\"type\":\"Point\"}",
+                    "{\"coordinates\":[37.561834,55.550034],\"type\":\"Point\"}",
+                    "{\"coordinates\":[37.559957,55.550103],\"type\":\"Point\"}",
+                    "{\"coordinates\":[37.561723,55.551396],\"type\":\"Point\"}",
+                    "{\"coordinates\":[37.560797,55.551181],\"type\":\"Point\"}",
+                    "{\"coordinates\":[37.561287,55.551385],\"type\":\"Point\"}",
+                    "{\"coordinates\":[37.561239,55.550991],\"type\":\"Point\"}",
+                    "{\"coordinates\":[37.561262,55.550879],\"type\":\"Point\"}",
+                    "{\"coordinates\":[37.561262,55.550879],\"type\":\"Point\"}",
+                    "{\"coordinates\":[37.561262,55.550879],\"type\":\"Point\"}",
+                    "{\"coordinates\":[37.561262,55.550879],\"type\":\"Point\"}",
+                    "{\"coordinates\":[37.561262,55.550879],\"type\":\"Point\"}",
+                    "{\"coordinates\":[37.56093,55.549985],\"type\":\"Point\"}",
+                    "{\"coordinates\":[37.56085,55.549706],\"type\":\"Point\"}",
+                    "{\"coordinates\":[37.562905,55.550808],\"type\":\"Point\"}",
+                    "{\"coordinates\":[37.56337,55.550821],\"type\":\"Point\"}",
+                    "{\"coordinates\":[37.559518,55.549727],\"type\":\"Point\"}",
+                    "{\"coordinates\":[37.558282,55.550425],\"type\":\"Point\"}",
+                    "{\"coordinates\":[37.561497,55.550104],\"type\":\"Point\"}"
+                  ],
+                  [
+                    null,
+                    "U24",
+                    "[\"U41\",[37.557254,55.551237],\"U17\"]",
+                    "[\"U13\",[37.558392,55.550769],\"U16\"]",
+                    "[\"U40\",[37.557004,55.551914],[37.556633,55.551624],\"U31\"]",
+                    "U22",
+                    "",
+                    "[\"U16\",[37.559343,55.550775],[37.559873,55.550868],[37.560135,55.550782],\"U21\"]",
+                    "[\"U11\",[37.557881,55.550542],\"U13\"]",
+                    "U14",
+                    "U41",
+                    null,
+                    "U32",
+                    "[\"U26\",[37.561417, 55.551812],[37.561548,55.551701],[37.561472,55.551736],[37.561447,55.551721],[37.561578,55.551666],[37.561596,55.551681],[37.56174,55.551619],\"U36\"]",
+                    "[\"U34\",[37.560997,55.552207],\"U35\"]",
+                    "",
+                    "[\"U22\",[37.561245,55.550602],[37.561529,55.55073],\"M2\", \"TTK\"]",
+                    "[\"U28\",[37.559779,55.55223],[37.559734,55.552329],[37.559883,55.552364],[37.559962,55.552563],[37.55996,55.552699],[37.5597,55.552718],\"U33\"]",
+                    "[\"U39\", \"M2\", \"TTK\"]",
+                    "[\"U17\",[37.556751,55.550997],[37.556849,55.550896],[37.55707,55.550802],\"U15\"]",
+                    "U11",
+                    "U26",
+                    "U5",
+                    "[\"U35\",[37.56106,55.551937],[37.560871,55.551917],[37.560957,55.55186],[37.561027,55.551733],\"U26\"]",
+                    "U23",
+                    "U3",
+                    "[\"U31\",[37.556584,55.551276],[37.556932,55.55118],\"U17\"]",
+                    "U30",
+                    "[\"U30\",[37.558056,55.552063],\"U29\"]",
+                    "U11",
+                    "U2",
+                    "U3",
+                    "U10",
+                    "U19",
+                    "U18",
+                    "[\"U12\",[37.558885,55.549977],\"U9\"]",
+                    "[\"U18\",[37.55607,55.550737],[37.556486,55.550678],\"U15\"]",
+                    "U28",
+                    "[\"U38\",[37.562555,55.551399],[37.562448,55.551187],\"U39\"]",
+                    "U4",
+                    "[\"U23\",[37.559662,55.551244],[37.560133,55.551041],\"U21\"]",
+                    "U38",
+                    "[\"U8\",[37.555387,55.549687],\"U6\"]",
+                    "U37",
+                    "[\"U7\",[37.557237,55.549249],\"U1\"]",
+                    "[\"U3\",[37.557202,55.550144],\"U11\"]",
+                    "[\"10.250.2.19\",\"U34\",\"U35\",\"U26\",\"10.250.1.2\"]",
+                    "[\"10.250.2.18\",[37.561256,55.552027],\"U35\",\"U26\",\"10.250.1.2\"]",
+                    "[\"10.250.2.29\",\"U14\",\"U11\",\"10.250.1.4\"]",
+                    "[\"10.250.2.42\",\"U42\",\"U41\",\"U17\",\"10.250.1.5\"]",
+                    "[\"10.250.2.49\",\"U3\",\"10.250.1.6\"]",
+                    "[\"10.250.2.50\",\"U2\",\"U3\",\"10.250.1.6\"]",
+                    "[\"10.250.2.34\",\"U13\",\"U16\",\"U21\",\"10.250.1.1\"]",
+                    "[\"10.250.2.33\",\"U11\",\"10.250.1.4\"]",
+                    "[\"10.250.2.30\",\"U12\",\"U9\",\"U10\",\"U11\",\"10.250.1.4\"]",
+                    "[\"10.250.2.37\",\"U20\",\"U19\",\"U18\",\"U15\",\"10.250.2.28\"]",
+                    "[\"10.250.2.38\",\"U19\",\"U18\",\"U15\",\"10.250.2.28\"]",
+                    "[\"10.250.2.44\",\"U7\",\"U1\",\"U2\",\"U3\",\"10.250.1.6\"]",
+                    "[\"10.250.2.17\",\"U26\",\"10.250.1.2\"]",
+                    "[\"10.250.2.45\",\"U8\",\"U6\",\"U5\",\"U4\",\"U3\",\"10.250.1.6\"]",
+                    "[\"10.250.2.24\",[37.558399,55.551787,0,\"try \\\"modify\\\" mode !\", \"orange\"],[37.558842,55.55168, 0,\"try restoring coords in the side drawer\", \"#c936d1\"],[37.559328,55.551462,0,\"test comm 3\" ],\"10.250.1.3\"]",
+                    "[\"10.250.2.21\",\"U33\",\"U32\",\"U30\",\"U29\",\"U24\",\"U23\",\"10.250.1.3\"]",
+                    "[\"10.250.2.11\",\"U22\",\"U21\",\"10.250.1.1\"]",
+                    "[\"10.250.2.36\",\"U40\",\"U31\",\"U17\",\"10.250.1.5\"]",
+                    "[\"10.250.2.22\",\"U32\",\"U30\",\"U29\",\"U24\",\"U23\",\"10.250.1.3\"]",
+                    "[\"10.250.2.16\",[37.560672, 55.551311] \n,\"U25\",\"U26\",\"10.250.1.2\"]",
+                    "[\"10.250.2.47\",\"U5\",\"U4\",\"U3\",\"10.250.1.6\"]",
+                    "[\"10.250.2.51\",\"U1\",\"U2\",\"U3\",\"10.250.1.6\"]",
+                    "[\"10.250.2.20\",[37.560466,55.552073],[37.560137,55.552066],\"U28\",\"U33\",\"U32\",\"U30\",\"U29\",\"U24\",\"U23\",\"10.250.1.3\"]",
+                    "[\"10.250.2.10\",\"U21\",\"10.250.1.1\"]",
+                    "[\"10.250.2.23\",[37.558008,55.552331],\"U30\",\"U29\",\"U24\",\"U23\",\"10.250.1.3\"]",
+                    "[\"10.250.2.35\",\"U16\",\"U21\",\"10.250.1.1\"]",
+                    "[\"10.250.2.41\",\"U17\",\"10.250.1.5\"]",
+                    "[\"10.250.2.43\",\"U41\",\"U17\",\"10.250.1.5\"]",
+                    "[\"10.250.1.3\",\"U23\",\"U21\",\"10.250.1.1\"]",
+                    "[\"10.250.1.6\",\"U3\",\"U11\",\"10.250.1.4\"]",
+                    "[\"10.250.1.1\",\"U21\",\"U22\",\"M2\",\"TTK\",\"188.43.32.118\"]",
+                    "[\"10.250.1.2\",\"U26\",\"U36\",\"U37\",\"U38\",\"U39\",\"M2\",\"U22\",\"U21\",\"10.250.1.1\"]",
+                    "[\"10.250.1.5\",\"U17\",\"U15\",\"U14\",\"U11\",\"10.250.1.4\"]",
+                    "[\"10.250.2.25\",\"U23\",\"10.250.1.3\"]",
+                    "[\"10.250.1.4\",\"U11\",\"U13\",\"U16\",\"U21\",\"10.250.1.1\"]",
+                    "[\"10.250.2.31\",\"U9\",\"U10\",\"U11\",\"10.250.1.4\"]",
+                    "[\"10.250.2.32\",\"U10\",\"U11\",\"10.250.1.4\"]",
+                    "[\"10.250.2.28\",\"U15\",\"U14\",\"U11\",\"10.250.1.4\"]",
+                    "[\"10.250.2.39\",\"U18\",\"U15\",\"10.250.2.28\"]",
+                    "[\"10.250.2.13\",\"U38\",\"U37\",\"U36\",\"U26\",\"10.250.1.2\"]",
+                    "[\"10.250.2.26\",\"U24\",\"U23\",\"10.250.1.3\"]",
+                    "[\"10.250.2.27\",\"U27\",\"U28\",\"U33\",\"U32\",\"U30\",\"U29\",\"U24\",\"U23\",\"10.250.1.3\"]",
+                    "[\"10.250.2.40\",\"U31\",\"U17\",[37.556918,55.551032],[37.557014,55.550995],\"10.250.1.5\"]",
+                    "[\"10.250.2.14\",\"U37\",\"U36\",\"U26\",\"10.250.1.2\"]",
+                    "[\"10.250.2.48\",\"U4\",\"U3\",\"10.250.1.6\"]",
+                    "[\"10.250.2.15\",[37.561932,55.551883],\"U36\",\"U26\",\"10.250.1.2\"]",
+                    "[\"10.250.2.12\",\"U39\",\"U38\",\"U37\",\"U36\",\"U26\",\"10.250.1.2\"]",
+                    "[\"10.250.2.46\",\"U6\",\"U5\",\"U4\",\"U3\",\"10.250.1.6\"]",
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    "[\"multisrc_host\",\"int_node\",\"new6\"]",
+                    "[\"multisrc_host\",\"int_node\",\"new7\"]",
+                    "[\"multisrc_host\",\"int_node\",[37.561537, 55.551166, 0, \"parralel edge-1\", \"#B0E0E6\"] \n,\"new8\"]",
+                    "[\"multisrc_host\",\"int_node\",[37.561537, 55.551166, 0, \"parralel edge-2\", \"#B0E0E6\"] \n,\"new8\"]",
+                    "[\"multisrc_host\",\"int_node\",[37.561537, 55.551166, 0, \"parralel edge-3\", \"#B0E0E6\"] \n,\"new8\"]",
+                    "new1",
+                    "inst0",
+                    "[\"inst2\",[37.562637, 55.550084]  \n,\"inst1\"]",
+                    "inst2",
+                    "[\"inst4\", [37.562179, 55.549237], [37.56303,55.550019] , \"inst3\"]",
+                    "inst4",
+                    null
+                  ],
+                  [
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "mhost-new8-1rnd",
+                    "mhost-new8-2rnd",
+                    "mhost3rnd-new8-3rnd",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    "",
+                    null
+                  ],
+                  [
+                    1,
+                    null,
+                    1,
+                    0,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    3,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    2,
+                    1,
+                    3,
+                    2,
+                    0,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    1,
+                    3
+                  ],
+                  [
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    405000,
+                    760000,
+                    430000,
+                    123133,
+                    345345,
+                    522334,
+                    123455,
+                    234324,
+                    634233,
+                    675756,
+                    124555,
+                    423423,
+                    522222,
+                    122333,
+                    757567,
+                    324234,
+                    645644,
+                    234444,
+                    543232,
+                    877453,
+                    123123,
+                    436436,
+                    123234,
+                    547455,
+                    756755,
+                    235345,
+                    75675,
+                    456456,
+                    234232,
+                    123123,
+                    454566,
+                    345343,
+                    234234,
+                    756756,
+                    234234,
+                    567657,
+                    345345,
+                    242432,
+                    123122,
+                    456544,
+                    234544,
+                    456644,
+                    345353,
+                    123234,
+                    567599,
+                    878676,
+                    978777,
+                    756675,
+                    678666,
+                    456454,
+                    null,
+                    123123,
+                    234243,
+                    234232,
+                    535345,
+                    123123,
+                    900023,
+                    235436,
+                    840023,
+                    320023,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    340023
+                  ],
+                  [
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    234234,
+                    124324,
+                    575756,
+                    464655,
+                    234324,
+                    765876,
+                    234234,
+                    235456,
+                    234324,
+                    534535,
+                    464364,
+                    246464,
+                    124243,
+                    342543,
+                    234534,
+                    457422,
+                    213242,
+                    474544,
+                    123123,
+                    75675,
+                    123213,
+                    547455,
+                    124241,
+                    346464,
+                    234232,
+                    756756,
+                    244234,
+                    234234,
+                    645646,
+                    867868,
+                    234234,
+                    325353,
+                    657867,
+                    242343,
+                    565645,
+                    234244,
+                    756567,
+                    212323,
+                    234544,
+                    235235,
+                    665344,
+                    476437,
+                    234241,
+                    423123,
+                    476421,
+                    823213,
+                    123233,
+                    242432,
+                    467465,
+                    254242,
+                    0,
+                    467463,
+                    233333,
+                    757655,
+                    232323,
+                    543534,
+                    453645,
+                    567533,
+                    542322,
+                    420000,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    123534
+                  ],
+                  [
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    "connector",
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    "connector",
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    "someprop6",
+                    null,
+                    "someprop",
+                    "prop new6",
+                    "prop new7",
+                    "prop new8-1",
+                    "prop new8-2",
+                    "prop new8-3",
+                    "alerting_instance",
+                    "alerting_instance",
+                    "alerting_instance",
+                    "alerting_instance",
+                    "alerting_instance",
+                    "alerting_instance",
+                    ""
+                  ],
+                  [
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    "click anywhere on the map and copy GEOJSON button at the bottom left to use for the new records.",
+                    "drag points and lines. Link new sources. ",
+                    "Snap line guides to nodes (blue) to attach to its path",
+                    null,
+                    null,
+                    null,
+                    null,
+                    "for multisources every new source record target coordinates (geojson, or lon/lat) field should not be blank",
+                    "for multisources every subsequent source record target coordinates (geojson, or lon/lat) field should not be blank",
+                    "for multisource edges every subsequent record vertexA coordinates should not be blank",
+                    "",
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    "initial srcPath (path to source) can be a string or array"
+                  ],
+                  [
+                    "node",
+                    "node",
+                    "node",
+                    "node",
+                    "node",
+                    "node",
+                    "connector",
+                    "node",
+                    "node",
+                    "node",
+                    "node",
+                    null,
+                    "node",
+                    "node",
+                    "node",
+                    "connector",
+                    "node",
+                    "node",
+                    "node",
+                    "node",
+                    "node",
+                    "node",
+                    "node",
+                    "node",
+                    "node",
+                    "node",
+                    "node",
+                    "node",
+                    "node",
+                    "node",
+                    "node",
+                    "node",
+                    "node",
+                    "node",
+                    "node",
+                    "node",
+                    "node",
+                    "node",
+                    "node",
+                    "node",
+                    "node",
+                    "node",
+                    "node",
+                    "node",
+                    "node",
+                    "node",
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    "node",
+                    null,
+                    null,
+                    null,
+                    "node",
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null,
+                    null
+                  ]
+                ]
+              },
+              "schema": {
+                "fields": [
+                  {
+                    "config": {},
+                    "name": "vertexA",
+                    "type": "string"
+                  },
+                  {
+                    "config": {},
+                    "name": "geojson",
+                    "type": "string"
+                  },
+                  {
+                    "config": {},
+                    "name": "vertexB_path",
+                    "type": "string"
+                  },
+                  {
+                    "config": {},
+                    "name": "edgeId",
+                    "type": "string"
+                  },
+                  {
+                    "config": {},
+                    "name": "stat1",
+                    "type": "number"
+                  },
+                  {
+                    "config": {},
+                    "name": "bps_rx",
+                    "type": "number"
+                  },
+                  {
+                    "config": {},
+                    "name": "bps_tx",
+                    "type": "number"
+                  },
+                  {
+                    "config": {},
+                    "name": "someProp",
+                    "type": "string"
+                  },
+                  {
+                    "config": {},
+                    "name": "hints",
+                    "type": "string"
+                  },
+                  {
+                    "config": {},
+                    "name": "aggrType",
+                    "type": "string"
+                  }
+                ],
+                "name": "Sheet1"
+              }
+            }
+          ]
+        }
+      ],
+      "title": "Edit, append new rows or modify existing records using the visual editor. Visual edits are stored in your browser db and replicated via sqlite file in Grafana root folder. ",
+      "type": "datagrid"
+    }
+  ],
+  "refresh": "",
+  "schemaVersion": 38,
+  "style": "dark",
+  "tags": [],
+  "templating": {
+    "list": [
+      {
+        "current": {
+          "selected": false,
+          "text": "target",
+          "value": "target"
+        },
+        "hide": 2,
+        "includeAll": false,
+        "multi": false,
+        "name": "locRole",
+        "options": [
+          {
+            "selected": true,
+            "text": "target",
+            "value": "target"
+          },
+          {
+            "selected": false,
+            "text": "source",
+            "value": "source"
+          }
+        ],
+        "query": "target, source",
+        "skipUrlSync": false,
+        "type": "custom"
+      },
+      {
+        "current": {
+          "selected": true,
+          "text": "10.250.2.35",
+          "value": "10.250.2.35"
+        },
+        "hide": 2,
+        "name": "target",
+        "options": [
+          {
+            "selected": true,
+            "text": "10.250.2.35",
+            "value": "10.250.2.35"
+          }
+        ],
+        "query": "10.250.2.35",
+        "skipUrlSync": false,
+        "type": "textbox"
+      },
+      {
+        "current": {
+          "selected": true,
+          "text": "10.250.1.1",
+          "value": "10.250.1.1"
+        },
+        "hide": 2,
+        "name": "source",
+        "options": [
+          {
+            "selected": true,
+            "text": "10.250.1.1",
+            "value": "10.250.1.1"
+          }
+        ],
+        "query": "10.250.1.1",
+        "skipUrlSync": false,
+        "type": "textbox"
+      },
+      {
+        "current": {
+          "selected": false,
+          "text": "74",
+          "value": "74"
+        },
+        "hide": 2,
+        "includeAll": false,
+        "multi": false,
+        "name": "lineIds",
+        "options": [],
+        "query": "",
+        "skipUrlSync": false,
+        "type": "custom"
+      },
+      {
+        "current": {
+          "selected": false,
+          "text": "16",
+          "value": "16"
+        },
+        "hide": 2,
+        "includeAll": false,
+        "multi": false,
+        "name": "cluster_max_zoom",
+        "options": [
+          {
+            "selected": false,
+            "text": "14",
+            "value": "14"
+          },
+          {
+            "selected": false,
+            "text": "15",
+            "value": "15"
+          },
+          {
+            "selected": true,
+            "text": "16",
+            "value": "16"
+          },
+          {
+            "selected": false,
+            "text": "17",
+            "value": "17"
+          },
+          {
+            "selected": false,
+            "text": "18",
+            "value": "18"
+          }
+        ],
+        "query": "14, 15,16,17,18",
+        "queryValue": "",
+        "skipUrlSync": false,
+        "type": "custom"
+      },
+      {
+        "current": {
+          "selected": true,
+          "text": "0",
+          "value": "0"
+        },
+        "hide": 0,
+        "includeAll": false,
+        "label": "",
+        "multi": false,
+        "name": "hyperedges",
+        "options": [
+          {
+            "selected": true,
+            "text": "0",
+            "value": "0"
+          },
+          {
+            "selected": false,
+            "text": "1",
+            "value": "1"
+          }
+        ],
+        "query": "0,1",
+        "queryValue": "",
+        "skipUrlSync": false,
+        "type": "custom"
+      }
+    ]
+  },
+  "time": {
+    "from": "now-1h",
+    "to": "now"
+  },
+  "timepicker": {},
+  "timezone": "",
+  "title": "Mapgl premium visual editor + alerts history",
+  "uid": "b69734bb-fc06-4916-8c25-6fb448e60409",
+  "version": 633,
+  "weekStart": ""
+}

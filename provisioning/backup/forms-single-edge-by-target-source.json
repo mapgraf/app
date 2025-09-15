@@ -1,0 +1,204 @@
+ {
+      "datasource": {
+        "type": "frser-sqlite-datasource",
+        "uid": "fdvk9ksb0zu9se"
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 4,
+        "x": 8,
+        "y": 16
+      },
+      "id": 4,
+      "options": {
+        "buttonGroup": {
+          "orientation": "center",
+          "size": "sm"
+        },
+        "confirmModal": {
+          "body": "Please confirm to update changed values",
+          "cancel": "Cancel",
+          "columns": {
+            "include": [
+              "name",
+              "oldValue",
+              "newValue"
+            ],
+            "name": "Label",
+            "newValue": "New Value",
+            "oldValue": "Old Value"
+          },
+          "confirm": "Confirm",
+          "elementDisplayMode": "modified",
+          "title": "Confirm update request"
+        },
+        "elementValueChanged": "",
+        "elements": [
+          {
+            "id": "target",
+            "labelWidth": 10,
+            "options": [],
+            "optionsSource": "Query",
+            "queryField": {
+              "label": "B:target",
+              "refId": "B",
+              "value": "target"
+            },
+            "queryOptions": {
+              "label": "target",
+              "source": "B",
+              "value": "target"
+            },
+            "section": "",
+            "showIf": "",
+            "title": "target",
+            "tooltip": "",
+            "type": "disabled",
+            "uid": "2ee28f13-32b1-4216-b1e7-eb22353fb1ed",
+            "unit": "",
+            "value": ""
+          },
+          {
+            "id": "source",
+            "labelWidth": 10,
+            "options": [],
+            "optionsSource": "Query",
+            "queryField": {
+              "label": "B:source",
+              "refId": "B",
+              "value": "source"
+            },
+            "queryOptions": {
+              "label": "source",
+              "source": "B",
+              "value": "source"
+            },
+            "section": "",
+            "title": "source",
+            "tooltip": "",
+            "type": "disabled",
+            "uid": "16a7543e-15e4-465f-9bde-d218c1376adc",
+            "unit": "",
+            "value": ""
+          },
+          {
+            "id": "parPath",
+            "labelWidth": 10,
+            "options": [],
+            "optionsSource": "Query",
+            "queryField": {
+              "label": "B:value",
+              "refId": "B",
+              "value": "value"
+            },
+            "queryOptions": {
+              "label": "value",
+              "source": "B",
+              "value": "value"
+            },
+            "section": "",
+            "title": "srcPath",
+            "tooltip": "",
+            "type": "disabled",
+            "uid": "bfb8ca7f-2ed3-43e1-87ec-4123f8c1ddc2",
+            "unit": "",
+            "value": ""
+          },
+          {
+            "id": "deleted",
+            "labelWidth": 10,
+            "section": "",
+            "showIf": "return true\nconst val = context.panel.elements.find(el => el.id === 'edge')?.value\n return typeof val === 'number'\n",
+            "title": "deleted",
+            "tooltip": "mark as deleted",
+            "type": "boolean",
+            "uid": "2f7e70e7-64c7-46a6-bd20-da6eeb6fec84",
+            "unit": "",
+            "value": false,
+            "width": 10
+          }
+        ],
+        "initial": {
+          "code": "const delField = context.panel.elements.find(el => el.id === 'deleted')\n\nif (!delField) { return }\n\nconst comboKeyId = '$target-$source'\n\n\nconst series = context.panel.data?.series[0]; // Assuming you're dealing with the first series\n\n// Step 1: Identify the indices. \nconst keyIdIndex = series.fields.findIndex(field => field.name === 'combined_key');\nconst fieldIndex = series.fields.findIndex(field => field.name === 'field');\nconst valueIndex = series.fields.findIndex(field => field.name === 'value');\n\n\n\n// Step 2: Filter by 'key_id'\nconst filteredIndices = [];\nfor (let i = 0; i < series.fields[keyIdIndex].values.length; i++) {\n  if (series.fields[keyIdIndex].values[i] === comboKeyId) {\n    filteredIndices.push(i);\n  }\n}\n\n\n// Step 3: Search for records where 'field' equals 'deleted'\nconst deletedRecords = filteredIndices.filter(index =>\n  series.fields[fieldIndex].values[index] === 'deleted'\n).map(index => {\n  return {\n    key_id: series.fields[keyIdIndex].values[index],\n    field: series.fields[fieldIndex].values[index],\n    value: series.fields[valueIndex].values[index],\n  };\n});\n\n\n// Output the filtered records\n\nif (!deletedRecords.length) { return [] }\n\nconst delVal = deletedRecords[0].value\n\nconsole.log('deleted', delVal);\n\nconst pathField = context.panel.elements.find(el => el.id === 'parPath')\n\nif (delField) {\n  delField.value = parseInt(delVal) ? true : false\n  console.log('delField.value', delField.value)\n}\n\n////\nconsole.log(context.panel.data, context.panel.response, context.panel.initial, context.panel.elements);\n\nreturn;\n\n/**\n * Data Source\n * Requires form elements to be defined\n */\nconst dataQuery = context.utils.toDataQueryResponse(context.panel.response);\nconsole.log('dataQuery', dataQuery);",
+          "contentType": "application/json",
+          "datasource": "mapgl-data",
+          "getPayload": "\nconsole.log('initial request payload get')\nreturn\n\nconst edgeId = context.panel.elements.find(el => el.id === 'edge')\n\nif (!edgeId) { return }\n\nconst dataset = context.panel.data?.series?.[0]\n\n\nconst series = context.panel.data?.series[0]; // Assuming you're dealing with the first series\n\n// Step 1: Identify the indices of 'key_id', 'field', and 'value'\nconst keyIdIndex = series.fields.findIndex(field => field.name === 'key_id');\nconst fieldIndex = series.fields.findIndex(field => field.name === 'field');\nconst valueIndex = series.fields.findIndex(field => field.name === 'value');\n\nconsole.log('idxs', keyIdIndex, fieldIndex, valueIndex)\n\n// Assuming you want to filter by a specific key_id value, e.g., 12345\nconst targetKeyId = edgeId;\n\n// Step 2: Filter by 'key_id'\nconst filteredIndices = [];\nfor (let i = 0; i < series.fields[keyIdIndex].values.length; i++) {\n  if (series.fields[keyIdIndex].values[i] === targetKeyId) {\n    filteredIndices.push(i);\n  }\n}\n\n// Step 3: Search for records where 'field' equals 'deleted'\nconst deletedRecords = filteredIndices.filter(index =>\n  series.fields[fieldIndex].values[index] === 'deleted'\n).map(index => {\n  return {\n    key_id: series.fields[keyIdIndex].values[index],\n    field: series.fields[fieldIndex].values[index],\n    value: series.fields[valueIndex].values[index],\n  };\n});\n\n// Output the filtered records\nconsole.log('deletedRecords', deletedRecords);\n\nif (!deletedRecords.length) { return [] }\n\n\n\nconst val = deletedRecords[0].value\nconst parsed = parseInt(val)\nconsole.log('deleted', val)\nconst payload = {}\n\nconst edges = context.panel.elements.forEach(el => {\n  if (el.id === 'deleted') {\n    ocnsole.log('foun del', el.id)\n    payload[el.id] = [{ label: 'deleted', value: parsed ? true : false }]\n    // context.panel.setInitial(payload)\n  }\n})\n\nreturn [{ label: 'deleted', value: parsed ? true : false }]\n\n\n//[parsed? true : false]\n\n\n\n\n\nconsole.log('payload vars')\nconsole.log('ctx elementss', context.panel.elements)\nreturn {}",
+          "highlight": false,
+          "highlightColor": "semi-dark-red",
+          "method": "query",
+          "payload": {
+            "queryText": "SELECT CAST(strftime('%s', 'now', '-1 minute') as INTEGER) as time, 4 as value \nWHERE time >= $__from / 1000 and time < $__to / 1000",
+            "queryType": "table",
+            "rawQueryText": "SELECT CAST(strftime('%s', 'now', '-1 minute') as INTEGER) as time, 4 as value \nWHERE time >= $__from / 1000 and time < $__to / 1000",
+            "timeColumns": [
+              "time",
+              "ts"
+            ]
+          }
+        },
+        "layout": {
+          "orientation": "horizontal",
+          "padding": 7,
+          "sectionVariant": "default",
+          "variant": "single"
+        },
+        "reset": {
+          "backgroundColor": "purple",
+          "foregroundColor": "yellow",
+          "icon": "process",
+          "text": "Reset",
+          "variant": "hidden"
+        },
+        "resetAction": {
+          "code": "if (context.panel.response) {\n  context.grafana.notifySuccess(['Update', 'Values updated successfully.']);\n  context.grafana.locationService.reload();\n} else {\n  context.grafana.notifyError(['Update', 'An error occurred updating values.']);\n}",
+          "confirm": true,
+          "getPayload": "return {}",
+          "mode": "initial",
+          "payload": {}
+        },
+        "saveDefault": {
+          "icon": "save",
+          "text": "Save Default",
+          "variant": "hidden"
+        },
+        "submit": {
+          "backgroundColor": "super-light-blue",
+          "foregroundColor": "super-light-blue",
+          "icon": "cloud-upload",
+          "text": "Submit",
+          "variant": "secondary"
+        },
+        "sync": true,
+        "update": {
+          "code": "",
+          "confirm": true,
+          "contentType": "application/json",
+          "datasource": "mapgl-data",
+          "getPayload": "const payload = {};\n\ncontext.panel.elements.forEach((element) => {\n  if (!element.value) {\n    return;\n  }\n\n  payload[element.id] = element.value;\n})\n\nreturn payload;",
+          "method": "datasource",
+          "payload": "const payload = {};\n\ncontext.panel.elements.forEach((element) => {\n  if (!element.value) {\n    return;\n  }\n\n  payload[element.id] = element.value;\n})\n\nreturn payload;",
+          "payloadMode": "all"
+        },
+        "updateEnabled": "auto"
+      },
+      "pluginVersion": "4.3.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "frser-sqlite-datasource",
+            "uid": "fdvk9ksb0zu9se"
+          },
+          "hide": false,
+          "queryText": "WITH target_readable AS (\n    SELECT key AS readable_target\n    FROM vstring\n    WHERE value = '$target'\n),\nsource_readable AS (\n    SELECT key AS readable_source\n    FROM vstring\n    WHERE value = '$source'\n)\nSELECT \n     vhash.*,  -- Select all columns from vhash\n    '$target' AS target,\n    '$source' AS source,  \n    '$target' || '-' || '$source' AS combined_key  \nFROM vhash\nWHERE key = (\n    SELECT readable_target || '-' || readable_source\n    FROM target_readable, source_readable\n)\n\n",
+          "queryType": "table",
+          "rawQueryText": "WITH target_readable AS (\n    SELECT key AS readable_target\n    FROM vstring\n    WHERE value = '$target'\n),\nsource_readable AS (\n    SELECT key AS readable_source\n    FROM vstring\n    WHERE value = '$source'\n)\nSELECT \n     vhash.*,  -- Select all columns from vhash\n    '$target' AS target,\n    '$source' AS source,  \n    '$target' || '-' || '$source' AS combined_key  \nFROM vhash\nWHERE key = (\n    SELECT readable_target || '-' || readable_source\n    FROM target_readable, source_readable\n)\n\n",
+          "refId": "B",
+          "timeColumns": [
+            "time",
+            "ts"
+          ]
+        }
+      ],
+      "title": "/usr/share/grafana/public/mapgl-data.db",
+      "type": "volkovlabs-form-panel"
+    },

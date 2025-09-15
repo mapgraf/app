@@ -1,0 +1,9 @@
+apiVersion: 1
+
+apps:
+  - type: 'vaduga-mapgl-app'
+    disabled: false
+    jsonData:      
+      apiPort: '8089'
+    secureJsonData:
+      apiToken: secret-key

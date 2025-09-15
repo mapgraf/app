@@ -4,13 +4,16 @@ logs
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+.pnpm-debug.log*
 
 node_modules/
-mage/
 
-# Secrets
-*.env
-*.sqlite
+# yarn
+.yarn/cache
+.yarn/unplugged
+.yarn/build-state.yml
+.yarn/install-state.gz
+.pnp.*
 
 # Runtime data
 pids
@@ -25,32 +28,33 @@ lib-cov
 coverage
 
 # Compiled binary addons (https://nodejs.org/api/addons.html)
-# dist/
+dist_comm/
+dist_lite/
 artifacts/
 work/
 ci/
-e2e-results/
-**/cypress/videos
-**/cypress/report.json
+
+# e2e test directories
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+/playwright/.auth/
 
 # Editor
 .idea
 
 .eslintcache
 
-docker_data/
-runjs/
-redis_data/
-selectel/
 
-/mkdocs/
-/.vscode/launch.json
-/mage/site/themes/learn/.gitignore
+# Secrets
+*.env
 
-/dist_comm/
-/dist_lite/
-/src/jco/
+docker_data/grafana_data
+docker_data/certs
+cert.csr
+key.pem
+
 **/public_key*
 **/secret_key*
-**/jco/
-bindings.rs
+**/token.txt*

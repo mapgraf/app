@@ -1,0 +1,169 @@
+ {
+      "datasource": {
+        "type": "frser-sqlite-datasource",
+        "uid": "fdvk9ksb0zu9se"
+      },
+      "gridPos": {
+        "h": 7,
+        "w": 10,
+        "x": 8,
+        "y": 16
+      },
+      "id": 4,
+      "options": {
+        "buttonGroup": {
+          "orientation": "center",
+          "size": "sm"
+        },
+        "confirmModal": {
+          "body": "Please confirm to update changed values",
+          "cancel": "Cancel",
+          "columns": {
+            "include": [
+              "name",
+              "oldValue",
+              "newValue"
+            ],
+            "name": "Label",
+            "newValue": "New Value",
+            "oldValue": "Old Value"
+          },
+          "confirm": "Confirm",
+          "elementDisplayMode": "modified",
+          "title": "Confirm update request"
+        },
+        "elementValueChanged": "\nif (context.element.id === 'edge') {\n\n  const edgeId = context.element.value\n\n  if (!edgeId) { return }\n\n  const series = context.panel.data?.series[0]; // Assuming you're dealing with the first series\n\n  // Step 1: Identify the indices of 'key_id', 'field', and 'value'\n  const keyIdIndex = series.fields.findIndex(field => field.name === 'key_id');\n  const fieldIndex = series.fields.findIndex(field => field.name === 'field');\n  const valueIndex = series.fields.findIndex(field => field.name === 'value');\n\n  console.log('idxs', keyIdIndex, fieldIndex, valueIndex)\n\n  // Assuming you want to filter by a specific key_id value, e.g., 12345\n  const targetKeyId = edgeId;\n\n  // Step 2: Filter by 'key_id'\n  const filteredIndices = [];\n  for (let i = 0; i < series.fields[keyIdIndex].values.length; i++) {\n    if (series.fields[keyIdIndex].values[i] === targetKeyId) {\n      filteredIndices.push(i);\n    }\n  }\n\n  // Step 3: Search for records where 'field' equals 'deleted'\n  const deletedRecords = filteredIndices.filter(index =>\n    series.fields[fieldIndex].values[index] === 'deleted'\n  ).map(index => {\n    return {\n      key_id: series.fields[keyIdIndex].values[index],\n      field: series.fields[fieldIndex].values[index],\n      value: series.fields[valueIndex].values[index],\n    };\n  });\n\n  // Step 4: parpath\n  const pathRecords = filteredIndices.filter(index =>\n    series.fields[fieldIndex].values[index] === 'parPath'\n  ).map(index => {\n    return {\n      key_id: series.fields[keyIdIndex].values[index],\n      field: series.fields[fieldIndex].values[index],\n      value: series.fields[valueIndex].values[index],\n    };\n  });\n\n  // Output the filtered records\n\n  if (!deletedRecords.length) { return [] }\n\n  const delVal = deletedRecords[0].value\n  const pathVal = pathRecords[0].value\n  console.log('deleted', delVal);\n\n  const delField = context.panel.elements.find(el => el.id === 'deleted')\n  const pathField = context.panel.elements.find(el => el.id === 'parPath')\n\n  if (delField) {\n    delField.value = parseInt(delVal) ? true : false\n    console.log('delField.value', delField.value)\n  }\n\n  if (pathField) {\n    pathField.value = pathVal\n  }\n}\n",
+        "elements": [
+          {
+            "background": "",
+            "disableIf": "",
+            "getOptions": "",
+            "id": "edge",
+            "labelBackground": "#FADE2A",
+            "labelWidth": 10,
+            "options": [],
+            "optionsSource": "Query",
+            "queryOptions": {
+              "label": "combined_key",
+              "source": "B",
+              "value": "key_id"
+            },
+            "section": "",
+            "title": "edge",
+            "tooltip": "target-source",
+            "type": "select",
+            "uid": "2ee28f13-32b1-4216-b1e7-eb22353fb1ed",
+            "unit": "",
+            "value": []
+          },
+          {
+            "id": "parPath",
+            "labelWidth": 10,
+            "rows": 2,
+            "section": "",
+            "showIf": "const val = context.panel.elements.find(el => el.id === 'edge')?.value\nreturn typeof val === 'number'",
+            "title": "srcPath",
+            "tooltip": "",
+            "type": "disabledTextarea",
+            "uid": "bfb8ca7f-2ed3-43e1-87ec-4123f8c1ddc2",
+            "unit": "",
+            "value": ""
+          },
+          {
+            "id": "deleted",
+            "labelWidth": 10,
+            "section": "",
+            "showIf": "const val = context.panel.elements.find(el => el.id === 'edge')?.value\n return typeof val === 'number'\n",
+            "title": "deleted",
+            "tooltip": "mark as deleted",
+            "type": "boolean",
+            "uid": "2f7e70e7-64c7-46a6-bd20-da6eeb6fec84",
+            "unit": "",
+            "value": false,
+            "width": 10
+          }
+        ],
+        "initial": {
+          "code": "\nconst edgeField = context.panel.elements.find(el => el.id === 'edge')\nif (!edgeField) { return }\n\ncomboKeyId = '$target-$source'\n\nif (!comboKeyId) { return }\n\nconst series = context.panel.data?.series[0]; // Assuming you're dealing with the first series\n\n// Step 1: Identify the indices of 'key_id', 'field', and 'value'\nconst keyIdIndex = series.fields.findIndex(field => field.name === 'key_id');\nconst comboIndex = series.fields.findIndex(field => field.name === 'combined_key');\n\n\n// Step 2: Filter by 'key_id'\nconst filteredIndices = [];\nfor (let i = 0; i < series.fields[keyIdIndex].values.length; i++) {\n  if (series.fields[comboIndex].values[i] === comboKeyId) {\n    filteredIndices.push(i);\n  }\n}\nconsole.log('filteredIndices', filteredIndices)\n\n// Step 3: Search for records where 'field' equals 'deleted'\nconst comboRecords = filteredIndices.filter(index =>\n  series.fields[comboIndex].values[index] === comboKeyId\n).map(index => {\n  return {\n    key_id: series.fields[keyIdIndex].values[index],\n    comboKeyId: series.fields[comboIndex].values[index],\n  };\n});\n\n\n// Output the filtered records\n\nif (!comboRecords.length) { return [] }\n\nconst comborec = comboRecords[0].key_id\nconsole.log('coomborec', comborec)\n\nif (comborec !== undefined) {\n  edgeField.value = comborec\n}\n\n////\nconsole.log(context.panel.data, context.panel.response, context.panel.initial, context.panel.elements);\n\nreturn;\n\n/**\n * Data Source\n * Requires form elements to be defined\n */\nconst dataQuery = context.utils.toDataQueryResponse(context.panel.response);\nconsole.log('dataQuery', dataQuery);",
+          "contentType": "application/json",
+          "datasource": "mapgl-data",
+          "getPayload": "\nconsole.log('initial request payload get')\nreturn\n\nconst edgeId = context.panel.elements.find(el => el.id === 'edge')\n\nif (!edgeId) { return }\n\nconst dataset = context.panel.data?.series?.[0]\n\n\nconst series = context.panel.data?.series[0]; // Assuming you're dealing with the first series\n\n// Step 1: Identify the indices of 'key_id', 'field', and 'value'\nconst keyIdIndex = series.fields.findIndex(field => field.name === 'key_id');\nconst fieldIndex = series.fields.findIndex(field => field.name === 'field');\nconst valueIndex = series.fields.findIndex(field => field.name === 'value');\n\nconsole.log('idxs', keyIdIndex, fieldIndex, valueIndex)\n\n// Assuming you want to filter by a specific key_id value, e.g., 12345\nconst targetKeyId = edgeId;\n\n// Step 2: Filter by 'key_id'\nconst filteredIndices = [];\nfor (let i = 0; i < series.fields[keyIdIndex].values.length; i++) {\n  if (series.fields[keyIdIndex].values[i] === targetKeyId) {\n    filteredIndices.push(i);\n  }\n}\n\n// Step 3: Search for records where 'field' equals 'deleted'\nconst deletedRecords = filteredIndices.filter(index =>\n  series.fields[fieldIndex].values[index] === 'deleted'\n).map(index => {\n  return {\n    key_id: series.fields[keyIdIndex].values[index],\n    field: series.fields[fieldIndex].values[index],\n    value: series.fields[valueIndex].values[index],\n  };\n});\n\n// Output the filtered records\nconsole.log('deletedRecords', deletedRecords);\n\nif (!deletedRecords.length) { return [] }\n\n\n\nconst val = deletedRecords[0].value\nconst parsed = parseInt(val)\nconsole.log('deleted', val)\nconst payload = {}\n\nconst edges = context.panel.elements.forEach(el => {\n  if (el.id === 'deleted') {\n    ocnsole.log('foun del', el.id)\n    payload[el.id] = [{ label: 'deleted', value: parsed ? true : false }]\n    // context.panel.setInitial(payload)\n  }\n})\n\nreturn [{ label: 'deleted', value: parsed ? true : false }]\n\n\n//[parsed? true : false]\n\n\n\n\n\nconsole.log('payload vars')\nconsole.log('ctx elementss', context.panel.elements)\nreturn {}",
+          "highlight": false,
+          "highlightColor": "semi-dark-red",
+          "method": "-",
+          "payload": {
+            "queryText": "SELECT CAST(strftime('%s', 'now', '-1 minute') as INTEGER) as time, 4 as value \nWHERE time >= $__from / 1000 and time < $__to / 1000",
+            "queryType": "table",
+            "rawQueryText": "SELECT CAST(strftime('%s', 'now', '-1 minute') as INTEGER) as time, 4 as value \nWHERE time >= $__from / 1000 and time < $__to / 1000",
+            "timeColumns": [
+              "time",
+              "ts"
+            ]
+          }
+        },
+        "layout": {
+          "orientation": "horizontal",
+          "padding": 7,
+          "sectionVariant": "default",
+          "variant": "single"
+        },
+        "reset": {
+          "backgroundColor": "purple",
+          "foregroundColor": "yellow",
+          "icon": "process",
+          "text": "Reset",
+          "variant": "hidden"
+        },
+        "resetAction": {
+          "code": "if (context.panel.response) {\n  context.grafana.notifySuccess(['Update', 'Values updated successfully.']);\n  context.grafana.locationService.reload();\n} else {\n  context.grafana.notifyError(['Update', 'An error occurred updating values.']);\n}",
+          "confirm": true,
+          "getPayload": "return {}",
+          "mode": "initial",
+          "payload": {}
+        },
+        "saveDefault": {
+          "icon": "save",
+          "text": "Save Default",
+          "variant": "hidden"
+        },
+        "submit": {
+          "backgroundColor": "super-light-blue",
+          "foregroundColor": "super-light-blue",
+          "icon": "cloud-upload",
+          "text": "Submit",
+          "variant": "secondary"
+        },
+        "sync": true,
+        "update": {
+          "code": "",
+          "confirm": true,
+          "contentType": "application/json",
+          "datasource": "mapgl-data",
+          "getPayload": "const payload = {};\n\ncontext.panel.elements.forEach((element) => {\n  if (!element.value) {\n    return;\n  }\n\n  payload[element.id] = element.value;\n})\n\nreturn payload;",
+          "method": "datasource",
+          "payload": "const payload = {};\n\ncontext.panel.elements.forEach((element) => {\n  if (!element.value) {\n    return;\n  }\n\n  payload[element.id] = element.value;\n})\n\nreturn payload;",
+          "payloadMode": "all"
+        },
+        "updateEnabled": "auto"
+      },
+      "pluginVersion": "4.3.1",
+      "targets": [
+        {
+          "datasource": {
+            "type": "frser-sqlite-datasource",
+            "uid": "fdvk9ksb0zu9se"
+          },
+          "hide": false,
+          "queryText": "WITH target_uuid AS (\n    SELECT key, value \n    FROM vstring \n    WHERE value = '$target'\n),\nkey_parts AS (\n    SELECT \n        vhash.*,  -- Select all fields from vhash\n        tu.value AS readable_key,  -- Get the readable value from target_uuid\n        SUBSTR(vhash.key, INSTR(vhash.key, '-') + 1) AS source_id  -- Extract the second part (source ID)\n    FROM vhash\n    JOIN target_uuid tu ON vhash.key LIKE tu.key || '%'  -- Join on the target UUID\n)\nSELECT \n    kp.*,  -- Select all fields from key_parts\n    sv.value AS source_readable_value,  -- Get the readable value for the source ID\n    kp.readable_key || '-' || sv.value AS combined_key  -- Combine readable key with the readable value of the source ID\nFROM key_parts kp\nJOIN vstring sv ON kp.source_id = sv.key;  -- Lookup the readable value for the source ID",
+          "queryType": "table",
+          "rawQueryText": "WITH target_uuid AS (\n    SELECT key, value \n    FROM vstring \n    WHERE value = '$target'\n),\nkey_parts AS (\n    SELECT \n        vhash.*,  -- Select all fields from vhash\n        tu.value AS readable_key,  -- Get the readable value from target_uuid\n        SUBSTR(vhash.key, INSTR(vhash.key, '-') + 1) AS source_id  -- Extract the second part (source ID)\n    FROM vhash\n    JOIN target_uuid tu ON vhash.key LIKE tu.key || '%'  -- Join on the target UUID\n)\nSELECT \n    kp.*,  -- Select all fields from key_parts\n    sv.value AS source_readable_value,  -- Get the readable value for the source ID\n    kp.readable_key || '-' || sv.value AS combined_key  -- Combine readable key with the readable value of the source ID\nFROM key_parts kp\nJOIN vstring sv ON kp.source_id = sv.key;  -- Lookup the readable value for the source ID",
+          "refId": "B",
+          "timeColumns": [
+            "time",
+            "ts"
+          ]
+        }
+      ],
+      "title": "/usr/share/grafana/public/mapgl-data.db",
+      "type": "volkovlabs-form-panel"
+    },
